@@ -3,7 +3,8 @@
    · Corpo: torso, due braccia, due gambe (lo stesso contorno ritagliato per regione), testa con occhi/naso/bocca.
    · Vive: respira, sbatte gli occhi, guarda il cursore, cammina, salta, scende dal cielo appeso al palloncino.
    · Il palloncino è il fumetto: si gonfia quando parla (il testo è scritto dentro) e si sgonfia quando tace.
-   API (window.Pallino): say(righe, {choices}) · point(elemento) · walkTo('left'|'right') · wave() · jump() · enter() · hide()/show() · poke().
+   · Il palloncino si può non avere: hold(false) lo toglie (l'ingresso di MCLS: Pallino saluta a mano libera), hold(true, {drop:true}) lo fa arrivare dall'alto e lo prende al volo.
+   API (window.Pallino): say(righe, {choices, plain, early}) · point(elemento) · walkTo('left'|'center'|'right') · wave() · greet() · hold() · jump() · enter() · rise() · hide()/show() · poke().
    Il motore è deterministico: tick(ms) fa avanzare il tempo (lo usa il ciclo di animazione; nei test si chiama a mano). */
 (() => {
   'use strict';
@@ -17,6 +18,7 @@
   const rot = (x, y, a, cx, cy) => { const c = Math.cos(rad(a)), s = Math.sin(rad(a)), dx = x - cx, dy = y - cy; return [cx + dx * c - dy * s, cy + dx * s + dy * c]; };
   const f1 = v => Math.round(v * 10) / 10;
   const wrapDeg = a => ((a + 540) % 360) - 180;
+  const GREET = 10;                                              // di quanti gradi si alza il braccio rispetto a quando regge il palloncino (poi saluta ±18°, senza toccare la testa)
 
   /* molla critica: la posizione segue il bersaglio senza rimbalzi eccessivi */
   const spring = (v, target, k, dt, damp = 1) => { const c = 2 * Math.sqrt(k) * damp; v.v += (k * (target - v.x) - c * v.v) * dt; v.x += v.v * dt; return v.x; };
@@ -60,13 +62,14 @@
   const say = html('div', 'mascot__say', root, { 'aria-hidden': 'true' });                 // il testo che si scrive lettera per lettera non va letto dallo screen reader
   const sr = html('p', 'mascot__sr', root, { 'aria-live': 'polite', 'aria-atomic': 'true' });   // ...che riceve la frase intera, in una volta
   const sayText = html('p', 'mascot__text', say);
+  const cap = html('p', 'mascot__caption', root, { 'aria-hidden': 'true' });                 // il saluto "a mano libera": testo semplice accanto a Pallino, senza palloncino
   const choicesEl = html('div', 'mascot__choices', root, { role: 'group', 'aria-label': 'Cosa vuoi fare?' });
   const hitKid = html('button', 'mascot__hit mascot__hit--kid', root, { type: 'button', 'aria-label': 'Pallino: parlami' });
   const hitBal = html('button', 'mascot__hit mascot__hit--bal', root, { type: 'button', 'aria-label': 'Il palloncino di Pallino', tabindex: '-1' });
 
   /* ---- stato ---- */
   const st = {
-    W: innerWidth, H: 600, ks: .3, big: 1, rising: false, fx: 0, fy: 0, tx: 0, station: 'right', t: 0, hidden: false,
+    W: innerWidth, H: 600, ks: .3, big: 1, bigT: 1, bs: S(1), held: true, greet: false, chH: 0, rising: false, fx: 0, fy: 0, tx: 0, station: 'right', t: 0, hidden: false,
     flip: S(1), faceDir: 1, lean: S(0), sy: S(1), sx: S(1), hop: { y: 0, v: 0 },
     armL: S(0), armR: S(0), legL: S(0), legR: S(0), head: S(0), look: { x: S(0), y: S(0) },
     walkPhase: 0, walkAmt: S(0), walkSpeed: 0,
@@ -78,10 +81,10 @@
   const api = { state: st };
 
   /* ---- misure ---- */
+  const sizeKid = () => { const KH = clamp(Math.min(innerHeight * .165, innerWidth * .36), 104, 164) * st.big; st.ks = KH / K.h; st.KH = KH; };
   const layout = () => {
     st.W = innerWidth; st.H = Math.min(680, innerHeight - 72);
-    const KH = clamp(Math.min(innerHeight * .165, innerWidth * .36), 104, 164) * st.big;
-    st.ks = KH / K.h; st.KH = KH;
+    sizeKid();
     svg.setAttribute('viewBox', `0 0 ${st.W} ${st.H}`);
     root.style.setProperty('--mh', st.H + 'px');
     st.fy = st.H - 6;
@@ -117,11 +120,21 @@
     return new Promise(res => { st.onLand = () => { st.dangle = 0; st.sy.x = .8; api.wave(3); res(); }; });
   };
 
-  api.setBig = v => { st.big = v; layout(); };                 // ingrandisce Pallino (l'ingresso di MCLS) o lo riporta alla misura normale
-  api.rise = () => {                                           // sale da sotto lo schermo salutando con la mano alzata
+  api.setBig = (v, smooth) => {                                // ingrandisce Pallino (l'ingresso di MCLS) o lo riporta alla misura normale (smooth: con calma)
+    st.bigT = v;
+    if (!smooth || reduceMotion) { st.bs.x = v; st.bs.v = 0; st.big = v; layout(); }
+  };
+  api.greet = on => { st.greet = on !== false; };              // a mano libera: il braccio sta alzato e saluta
+  api.hold = (on, opts = {}) => {                              // con o senza palloncino; drop: il palloncino arriva dall'alto e Pallino lo prende
+    st.held = on !== false;
+    if (!st.held) return;
+    if (opts.drop && !reduceMotion) { st.bal.drop = true; st.bal.fast = 1.6; } else st.bal.init = false;
+  };
+  api.where = () => [st.fx, innerHeight - st.H + st.fy - st.KH * .45];     // il centro di Pallino sullo schermo
+  api.rise = () => {                                           // sale da sotto lo schermo, tutto intero, salutando con la mano alzata
     layout(); st.fx = stationX(st.station); st.rising = true; st.dangle = 0; st.bal.init = false; st.ready = true; st.hidden = false;
     if (reduceMotion) { st.fy = st.H - 6; st.rising = false; settle(); return Promise.resolve(); }
-    st.fy = st.H + st.KH * 1.4; api.wave(5);
+    st.fy = st.H + st.KH * 1.4; api.wave(5); render();
     return new Promise(res => { st.onRise = () => { api.wave(3); res(); }; });
   };
 
@@ -147,40 +160,48 @@
       });
     });
     choicesEl.classList.toggle('is-on', !!(list && list.length));
+    st.chH = list && list.length ? choicesEl.offsetHeight : 0;   // l'altezza della colonna: il saluto si mette sopra
     placeChoices();
   };
+  /* say(righe, {choices, keep, onLine, manual, plain, early})
+     plain: le righe si scrivono come testo semplice accanto a Pallino (senza palloncino: è il saluto dell'ingresso);
+     early: le scelte compaiono subito, non alla fine delle righe. */
   api.say = (lines, opts = {}) => {
     const id = ++runId; clearTimers(); lines = [].concat(lines).filter(Boolean);
+    const plain = !!opts.plain, out = plain ? cap : sayText, box = plain ? cap : say;
     showChoices([]); st.idleT = 0; queue = { lines, opts, id }; lineIdx = 0;
+    if (plain) say.classList.remove('is-on'); else cap.classList.remove('is-on');
+    if (plain && opts.early && opts.choices) showChoices(opts.choices);
     return new Promise(res => {
       const next = () => {
         if (id !== runId) return res(false);
         if (lineIdx >= lines.length) {                           // finito: scelte, oppure si sgonfia
           st.typing = false;
-          if (opts.choices && opts.choices.length) showChoices(opts.choices);
-          else if (!opts.keep) holdTimer = setTimeout(() => { if (id === runId) deflate(); }, 1800);
+          if (opts.choices && opts.choices.length) { if (!(plain && opts.early)) showChoices(opts.choices); }
+          else if (!opts.keep && !plain) holdTimer = setTimeout(() => { if (id === runId) deflate(); }, 1800);
           return res(true);
         }
-        const text = lines[lineIdx++]; sayText.textContent = ''; sr.textContent = text; say.classList.add('is-on'); setD(fitD(text));
+        const text = lines[lineIdx++]; out.textContent = ''; sr.textContent = text; box.classList.add('is-on'); if (!plain) setD(fitD(text));
+        if (plain) placeChoices();
         if (opts.onLine) opts.onLine(lineIdx - 1);
-        if (reduceMotion) { sayText.textContent = text; st.typing = false; holdTimer = setTimeout(next, opts.manual ? 1e9 : Math.min(5200, 1500 + text.length * 55)); return; }
+        if (reduceMotion) { out.textContent = text; st.typing = false; holdTimer = setTimeout(next, opts.manual ? 1e9 : Math.min(5200, 1500 + text.length * 55)); return; }
         let i = 0; st.typing = true;
         const type = () => {
           if (id !== runId) return;
-          i += 1; sayText.textContent = text.slice(0, i);
+          i += 1; out.textContent = text.slice(0, i);
           if (i < text.length) typeTimer = setTimeout(type, /[.,!?]/.test(text[i - 1]) ? 150 : 26);
           else { st.typing = false; holdTimer = setTimeout(next, Math.min(4600, 1100 + text.length * 38)); }
         };
-        typeTimer = setTimeout(type, 420);                       // il tempo di gonfiarsi
+        typeTimer = setTimeout(type, plain ? 160 : 420);         // il tempo di gonfiarsi
       };
       queue.skip = () => {                                      // clic sul fumetto: se sta scrivendo completa la riga, altrimenti passa alla prossima
         clearTimers();
-        if (st.typing) { sayText.textContent = lines[lineIdx - 1] || ''; st.typing = false; holdTimer = setTimeout(next, 650); } else next();
+        if (st.typing) { out.textContent = lines[lineIdx - 1] || ''; st.typing = false; holdTimer = setTimeout(next, 650); } else next();
       };
       next();
     });
   };
-  const deflate = () => { say.classList.remove('is-on'); st.typing = false; st.bal.D = idleD(); st.bal.s.target = idleD(); if (reduceMotion) settle(); };
+  const deflate = () => { say.classList.remove('is-on'); cap.classList.remove('is-on'); st.typing = false; st.bal.D = idleD(); st.bal.s.target = idleD(); if (reduceMotion) settle(); };
   api.fit = text => {                                           // prova: la frase entra nel palloncino? (usata nei controlli)
     setD(fitD(text)); sayText.textContent = text; say.classList.add('is-on');
     for (let i = 0; i < 90; i++) api.tick(16);
@@ -195,10 +216,15 @@
 
   /* ---- ciclo ---- */
   const placeChoices = () => {
-    if (!choicesEl.classList.contains('is-on')) return;
+    const on = choicesEl.classList.contains('is-on'), capOn = cap.classList.contains('is-on');
+    if (!on && !capOn) return;
     const left = st.station === 'left' || st.station === 'center';
-    choicesEl.style.bottom = '10px'; choicesEl.style.left = left ? (st.fx + 90 * st.ks + 14) + 'px' : 'auto'; choicesEl.style.right = left ? 'auto' : (st.W - st.fx + 90 * st.ks + 14) + 'px';
-    choicesEl.style.alignItems = left ? 'flex-start' : 'flex-end';
+    const x = left ? (st.fx + 90 * st.ks + 14) + 'px' : 'auto', r = left ? 'auto' : (st.W - st.fx + 90 * st.ks + 14) + 'px';
+    if (on) {
+      choicesEl.style.bottom = '10px'; choicesEl.style.left = x; choicesEl.style.right = r;
+      choicesEl.style.alignItems = left ? 'flex-start' : 'flex-end';
+    }
+    if (capOn) { cap.style.bottom = (st.chH + 30) + 'px'; cap.style.left = x; cap.style.right = r; cap.style.textAlign = left ? 'left' : 'right'; }
   };
 
   const settle = () => { for (let i = 0; i < 90; i++) step(1 / 30); render(); };      // con "riduci movimento": va subito nella posizione finale
@@ -243,9 +269,19 @@
     const tgt = st.pointTo ? centerOf(st.pointTo) : st.cursor;
     if (tgt && !reduceMotion) { const [hx, hy] = kidToScreen(181, 120); lx = clamp((tgt[0] - hx) / 260, -1, 1); ly = clamp((tgt[1] - hy) / 260, -1, 1); }
     spring(st.look.x, lx, 140, dt); spring(st.look.y, ly, 140, dt); spring(st.head, st.look.x.x * 5 + 1.4 * Math.sin(t * 1.3), 160, dt);
+    /* cresce o si rimpicciolisce con calma (setBig con smooth) */
+    if (Math.abs(st.bs.x - st.bigT) > .0005 || Math.abs(st.bs.v) > .01) {
+      spring(st.bs, st.bigT, 55, dt, 1);
+      if (Math.abs(st.bs.x - st.bigT) < .0008 && Math.abs(st.bs.v) < .01) { st.bs.x = st.bigT; st.bs.v = 0; }
+      st.big = st.bs.x; sizeKid(); st.tx = stationX(st.station);
+    }
     /* braccio sinistro: saluto, indicazione, riposo */
     let armT = 4 * Math.sin(t * 1.1);
-    if (st.waveT > 0) { st.waveT -= dt; armT = 26 * Math.sin(t * 10.5) + 8; }
+    if (st.greet) {                                              // a mano libera: il braccio sta alzato accanto alla testa e saluta
+      armT = GREET + (st.waveT > 0 ? 18 * Math.sin(t * 10.5) : 4 * Math.sin(t * 1.7));
+      if (st.waveT > 0) st.waveT -= dt;
+    }
+    else if (st.waveT > 0) { st.waveT -= dt; armT = 26 * Math.sin(t * 10.5) + 8; }
     else if (st.pointTo) {
       const c = centerOf(st.pointTo), [kx, ky] = screenToKid(c[0], c[1]), px = K.pivots.armL, base = Math.atan2(K.hand[1] - px[1], K.hand[0] - px[0]);
       armT = clamp(wrapDeg(deg(Math.atan2(ky - px[1], kx - px[0]) - base)), -135, 120);
@@ -261,8 +297,12 @@
     const side = st.flip.x >= 0 ? -1 : 1, sway = Math.sin(t * 1.35) * 7, bob = Math.sin(t * 1.9) * 4;
     let bx = hx + side * (len * .45 + rO * .12) + sway, by = hy - len - rO + bob;
     bx = clamp(bx, rO + 6, st.W - rO - 6); by = Math.max(by, rO + 4);
+    if (st.bal.drop) {                                           // il palloncino arriva dall'alto, sulla corda: Pallino lo prende al volo
+      st.bal.drop = false; st.bal.init = true; st.bal.x.x = bx; st.bal.y.x = -(innerHeight - st.H) - rO * 2 - 30; st.bal.x.v = st.bal.y.v = 0;
+    }
     if (!st.bal.init) { st.bal.init = true; st.bal.x.x = bx; st.bal.y.x = by; st.bal.x.v = st.bal.y.v = 0; }
-    spring(st.bal.x, bx, 36, dt, .55); spring(st.bal.y, by, 36, dt, .55);
+    const kb = st.bal.fast > 0 ? 42 : 36; if (st.bal.fast > 0) st.bal.fast -= dt;
+    spring(st.bal.x, bx, kb, dt, .55); spring(st.bal.y, by, kb, dt, st.bal.fast > 0 ? .8 : .55);
     spring(st.bal.s, st.bal.D || idleD(), 90, dt, .6);
     if (!st.bal.D) st.bal.D = idleD();
     st.bal.sc = sc; st.bal.rO = rO; st.bal.hand = [hx, hy];
@@ -288,7 +328,11 @@
     const open = clamp(st.talk.x, 0, 1);
     mouthOpen.setAttribute('opacity', open > .12 ? 1 : 0); mouth.setAttribute('opacity', open > .12 ? 0 : 1);
     setT(mouthOpen, 'mo', `translate(${K.head.mouthC[0]} ${K.head.mouthC[1] + 1}) scale(${(.55 + .45 * open).toFixed(2)} ${(.4 + .9 * open).toFixed(2)}) translate(${-K.head.mouthC[0]} ${-(K.head.mouthC[1] + 1)})`);
-    /* palloncino e filo */
+    /* palloncino e filo (a mano libera non ci sono) */
+    if (last.held !== st.held) {
+      last.held = st.held; const v = st.held ? 'visible' : 'hidden';
+      gBal.setAttribute('visibility', v); gString.setAttribute('visibility', v); hitBal.style.display = st.held ? '' : 'none';
+    }
     const sc = st.bal.sc || .1, bx = st.bal.x.x, by2 = st.bal.y.x;
     setT(gBal, 'bal', `translate(${f1(bx)} ${f1(by2)}) scale(${sc.toFixed(4)}) translate(${-B.center[0]} ${-B.center[1]})`);
     const [hx, hy] = st.bal.hand || [bx, by2 + 100], kx = bx + (B.knot[0] - B.center[0]) * sc, ky = by2 + (B.knot[1] - B.center[1]) * sc;

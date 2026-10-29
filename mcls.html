@@ -13,36 +13,37 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/style.css?v=71">
-  <link rel="stylesheet" href="assets/css/glassmorphism.css?v=71">
+  <link rel="stylesheet" href="assets/css/style.css?v=73">
+  <link rel="stylesheet" href="assets/css/glassmorphism.css?v=73">
 
   <!-- tema; se si arriva dal portale (voce MCLS) l'ingresso è il portale blu, altrimenti il sipario LB. -->
   <script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}document.documentElement.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches){var back=/[?&]d=|#/.test(location.search+location.hash);document.documentElement.classList.add(back?'pt-enter':'pt-portal')}</script>
-  <script src="assets/js/brands.js?v=71" defer></script>
-  <script src="assets/js/marks.js?v=71" defer></script>
-  <script src="assets/js/mcls-data.js?v=71" defer></script>
-  <script src="assets/js/texts.js?v=71" defer></script>
-  <script src="assets/js/mascot-data.js?v=71" defer></script>
-  <script src="assets/js/site-data.js?v=71" defer></script>
-  <script src="assets/js/site.js?v=71" defer></script>
-  <script src="assets/js/logo-tile.js?v=71" defer></script>
-  <script src="assets/js/lightbox.js?v=71" defer></script>
-  <script src="assets/js/common.js?v=71" defer></script>
-  <script src="assets/js/mcls.js?v=71" defer></script>
-  <script src="assets/js/mascot-rig.js?v=71" defer></script>
-  <script src="assets/js/mascot.js?v=71" defer></script>
-  <script src="assets/js/guide.js?v=71" defer></script>
+  <script src="assets/js/brands.js?v=73" defer></script>
+  <script src="assets/js/marks.js?v=73" defer></script>
+  <script src="assets/js/mcls-data.js?v=73" defer></script>
+  <script src="assets/js/texts.js?v=73" defer></script>
+  <script src="assets/js/mascot-data.js?v=73" defer></script>
+  <script src="assets/js/site-data.js?v=73" defer></script>
+  <script src="assets/js/site.js?v=73" defer></script>
+  <script src="assets/js/logo-tile.js?v=73" defer></script>
+  <script src="assets/js/lightbox.js?v=73" defer></script>
+  <script src="assets/js/common.js?v=73" defer></script>
+  <script src="assets/js/mcls.js?v=73" defer></script>
+  <script src="assets/js/mascot-rig.js?v=73" defer></script>
+  <script src="assets/js/mascot.js?v=73" defer></script>
+  <script src="assets/js/guide.js?v=73" defer></script>
 </head>
 <body class="mcls-page">
   <div class="curtain" aria-hidden="true"><span>LB<i>.</i></span></div>
   <div class="portal" aria-hidden="true">
     <div class="portal__stage">
-      <svg class="portal__ring" viewBox="0 0 1000 560" aria-hidden="true" focusable="false">
+      <svg class="portal__ring" viewBox="-300 -300 600 600" aria-hidden="true" focusable="false">
         <defs>
-          <path id="mi-ell" d="M 500 50 A 450 230 0 1 1 499.9 50" fill="none"/>
-          <mask id="mi-mask" maskUnits="userSpaceOnUse" x="-100" y="-100" width="1200" height="760"><path class="mi-mask__p" d="M 500 50 A 450 230 0 1 1 499.9 50" pathLength="1" fill="none" stroke="#fff" stroke-width="130"/></mask>
+          <!-- un cerchio perfetto (raggio 250) centrato sul logo, che parte da ore 9 e gira in senso orario: il testo lo percorre tutto, fino a richiudersi -->
+          <path id="mi-circ" d="M -250 0 A 250 250 0 0 1 250 0 A 250 250 0 0 1 -250 0 Z" fill="none"/>
+          <mask id="mi-mask" maskUnits="userSpaceOnUse" x="-320" y="-320" width="640" height="640"><path class="mi-mask__p" d="M -250 0 A 250 250 0 0 1 250 0 A 250 250 0 0 1 -250 0" pathLength="1" fill="none" stroke="#fff" stroke-width="90"/></mask>
         </defs>
-        <g mask="url(#mi-mask)"><text><textPath href="#mi-ell" textLength="2170" lengthAdjust="spacing" data-t="mcls.intro.ring">More Creativity, Less Stress · More Creativity, Less Stress · </textPath></text></g>
+        <g mask="url(#mi-mask)"><text><textPath href="#mi-circ" data-t="mcls.intro.ring">More Creativity, Less Stress · More Creativity, Less Stress · </textPath></text></g>
       </svg>
       <i class="portal__w mk" style="-webkit-mask-image:url(assets/img/mcls/wordmark.svg);mask-image:url(assets/img/mcls/wordmark.svg)"></i>
     </div>

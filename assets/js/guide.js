@@ -1,5 +1,5 @@
-/* Guida di MCLS. Pallino compare nell'ingresso (la schermata blu: logo → scritta sul tracciato → Pallino sale da sotto e saluta)
-   e da lì si può già scegliere cosa fare. Dentro l'interfaccia resta raccolto nel piccolo pulsante «Pallino» in basso a destra:
+/* Guida di MCLS. Pallino compare nell'ingresso (la schermata blu: logo → scritta sul cerchio → Pallino sale da sotto, a mano libera, e saluta)
+   e da lì si può già scegliere cosa fare: appena scegli una risposta prende il palloncino e ti porta dentro. Dentro l'interfaccia resta raccolto nel piccolo pulsante «Pallino» in basso a destra:
    lo richiami quando vuoi e, se scorri per conto tuo, si fa da parte. Non è mai un elemento fisso e grande sopra i contenuti.
    Usa il motore della mascot (mascot.js), le sue parole (mascot-data.js) e le azioni della pagina (MCLSPage, in mcls.js).
    Il giro si interrompe quando l'utente tocca Pallino o preme Esc. */
@@ -42,37 +42,72 @@
     document.body.appendChild(hiddenBtn);
   };
   const summon = () => {                                          // sale da sotto, saluta e propone cosa fare
-    P.show(); P.setBig(1); P.walkTo('right', { instant: true }); P.rise();
+    P.show(); P.greet(false); P.hold(true); P.setBig(1); P.walkTo('right', { instant: true }); P.rise();
     P.say(met ? T.back : T.greet, { choices: menuChoices() }); met = true;
   };
   const quiet = async () => { tourId++; P.point(null); if (inIntro) await finishIntro(); hide(); };
 
-  /* ---- l'ingresso: schermata blu → logo → scritta sul tracciato → Pallino sale da sotto e saluta; si può già scegliere ---- */
+  /* ---- l'ingresso: schermata blu → logo → scritta sul cerchio → Pallino sale da sotto e saluta a mano libera; si può già scegliere ----
+     Il palloncino non c'è: lo prende nel momento in cui scegli una risposta, e ti porta dentro MCLS (enter). */
   const portal = () => $('.portal');
-  const finishIntro = () => {
+  const introBig = () => {                                       // Pallino a circa un quarto dello schermo, più grande del solito
+    const base = Math.min(164, Math.max(104, Math.min(innerHeight * .165, innerWidth * .36)));
+    return Math.min(1.75, Math.max(1.2, Math.min(innerHeight * .27, innerWidth * .6) / base));
+  };
+  const introStation = () => innerWidth < 700 ? 'left' : 'center';
+  const fitRing = () => {                                        // la scritta deve coprire il cerchio per intero: si regola la spaziatura delle lettere
+    const tp = $('.portal__ring textPath'), tx = tp && tp.parentNode; if (!tx) return;
+    try {
+      tx.setAttribute('letter-spacing', '0');
+      const n = [...tp.textContent].length, L = tp.getComputedTextLength(), C = 2 * Math.PI * 250;
+      if (n && L) tx.setAttribute('letter-spacing', ((C - L) / n).toFixed(3));
+    } catch {}
+  };
+  const finishIntro = (o = {}) => {                              // carry: il blu si richiude attorno a Pallino, che resta in scena (ti ha portato dentro)
     if (!inIntro) return Promise.resolve();
-    inIntro = false; P.quiet(); P.hide();
+    inIntro = false;
     const p = portal(), skip = $('.portal__skip'); if (skip) skip.hidden = true;
+    P.greet(false);
+    if (o.carry) {
+      const [x, y] = P.where(); if (p) { p.style.setProperty('--ox', x + 'px'); p.style.setProperty('--oy', y + 'px'); }
+      setTimeout(() => html.classList.add('mi-ink'), 320);
+      setTimeout(() => { P.setBig(1, true); P.walkTo('right'); }, 520);
+    } else { P.quiet(); P.hold(true); P.hide(); }
     html.dataset.mi = 'out'; if (p) p.classList.add('mi-out');
     return new Promise(res => setTimeout(() => {
-      html.classList.remove('pt-portal', 'mi-live'); delete html.dataset.mi; if (p) p.remove();
+      html.classList.remove('pt-portal', 'mi-live', 'mi-ink'); delete html.dataset.mi; if (p) p.remove();
       try { sessionStorage.removeItem('portal'); } catch {}
-      P.setBig(1); P.walkTo('right', { instant: true }); scrollTo(0, 0); res();
+      if (!o.carry) { P.setBig(1); P.walkTo('right', { instant: true }); }
+      scrollTo(0, 0); res();
     }, reduceMotion ? 0 : 1000));
+  };
+  let entering = false;
+  const enter = async run => {                                   // una risposta scelta nell'ingresso: arriva il palloncino, Pallino lo prende e ti porta dentro
+    if (!inIntro || entering) return;
+    entering = true; tourId++;
+    P.quiet(); P.point(null); P.greet(false); P.hold(true, { drop: true });
+    await wait(1250);
+    if (!inIntro) { entering = false; return; }
+    await finishIntro({ carry: true }); entering = false;
+    if (run) run();
   };
   const intro = async () => {
     inIntro = true; html.classList.add('mi-live'); html.dataset.mi = 'logo';
     try { history.scrollRestoration = 'manual'; } catch {} scrollTo(0, 0);       // l'ingresso parte sempre dall'alto
     const p = portal(); if (p) p.setAttribute('aria-hidden', 'false');
-    hide(true); P.setBig(1.3); P.walkTo('center', { instant: true });
+    hide(true); P.hold(false); P.greet(true); P.setBig(introBig()); P.walkTo(introStation(), { instant: true });
+    addEventListener('resize', () => { if (inIntro) { P.setBig(introBig()); P.walkTo(introStation(), { instant: true }); } });
     const skip = $('.portal__skip'); if (skip) skip.onclick = () => { tourId++; finishIntro().then(() => hide()); };
     addEventListener('keydown', e => { if (e.key === 'Escape' && inIntro) { tourId++; finishIntro().then(() => hide()); } });
+    try { await Promise.race([document.fonts.ready, wait(1200)]); } catch {}
+    fitRing();
     await wait(1000); if (!inIntro) return; html.dataset.mi = 'ring';
     await wait(1900); if (!inIntro) return; html.dataset.mi = 'rise';
     await wait(500); if (!inIntro) return;
     P.show(); await P.rise(); if (!inIntro) return;
     if (skip) skip.hidden = false; met = true;
-    P.say(T.intro.greet, { choices: mainChoices() });
+    P.say(T.intro.greet, { plain: true, early: true, keep: true, onLine: i => { if (i) P.wave(2); },
+      choices: mainChoices().map(c => ({ ...c, run: () => enter(c.run) })) });
   };
 
   /* ---- il giro: logo → settori → Tech → segni ---- */
@@ -85,7 +120,7 @@
   };
   async function tour() {
     const id = ++tourId, alive = () => id === tourId; touring = id;
-    if (inIntro) { await finishIntro(); if (!alive()) return; P.show(); P.rise(); }
+    if (inIntro) { await finishIntro(); if (!alive()) return; P.hold(true); P.show(); P.rise(); }
     P.walkTo('right'); P.point(null);
     if (!(await P.say(T.tour.start, { keep: true })) || !alive()) return;
     await Page.scrollTo('top-mcls'); if (!alive()) return;
