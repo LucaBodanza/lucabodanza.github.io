@@ -54,6 +54,7 @@
   const mouth = el('path', { d: K.head.mouth, fill: 'currentColor' }, gFace);
   const mouthOpen = el('ellipse', { cx: K.head.mouthC[0], cy: K.head.mouthC[1] + 1, rx: 7.5, ry: 6, fill: 'none', stroke: 'currentColor', 'stroke-width': 3.6, opacity: 0 }, gFace);
   const gBal = el('g', {}, svg);
+  el('circle', { cx: B.center[0], cy: B.center[1], r: B.outer - 8, class: 'mascot__bfill' }, gBal);        // lo sfondo del fumetto: il testo si legge su qualunque pagina
   el('path', { d: B.d, fill: 'currentColor', 'clip-path': 'url(#pl-bal)' }, gBal);
 
   const say = html('div', 'mascot__say', root, { 'aria-hidden': 'true' });                 // il testo che si scrive lettera per lettera non va letto dallo screen reader
@@ -65,7 +66,7 @@
 
   /* ---- stato ---- */
   const st = {
-    W: innerWidth, H: 600, ks: .3, fx: 0, fy: 0, tx: 0, station: 'right', t: 0, hidden: false,
+    W: innerWidth, H: 600, ks: .3, big: 1, rising: false, fx: 0, fy: 0, tx: 0, station: 'right', t: 0, hidden: false,
     flip: S(1), faceDir: 1, lean: S(0), sy: S(1), sx: S(1), hop: { y: 0, v: 0 },
     armL: S(0), armR: S(0), legL: S(0), legR: S(0), head: S(0), look: { x: S(0), y: S(0) },
     walkPhase: 0, walkAmt: S(0), walkSpeed: 0,
@@ -79,7 +80,7 @@
   /* ---- misure ---- */
   const layout = () => {
     st.W = innerWidth; st.H = Math.min(680, innerHeight - 72);
-    const KH = clamp(Math.min(innerHeight * .165, innerWidth * .36), 104, 164);
+    const KH = clamp(Math.min(innerHeight * .165, innerWidth * .36), 104, 164) * st.big;
     st.ks = KH / K.h; st.KH = KH;
     svg.setAttribute('viewBox', `0 0 ${st.W} ${st.H}`);
     root.style.setProperty('--mh', st.H + 'px');
@@ -87,7 +88,7 @@
     const x = stationX(st.station); st.tx = x; if (!st.ready || reduceMotion) st.fx = x;
     if (reduceMotion && api.tick) settle();
   };
-  const stationX = name => name === 'left' ? 18 + 150 * st.ks : st.W - 18 - 150 * st.ks;
+  const stationX = name => name === 'center' ? st.W / 2 : name === 'left' ? 18 + 150 * st.ks : st.W - 18 - 150 * st.ks;
 
   /* ---- geometria: da coordinate del disegno a pixel del contenitore (e ritorno) ---- */
   const kidToScreen = (x, y, armAng = 0, viaArmL = false) => {
@@ -114,6 +115,14 @@
     if (reduceMotion) { st.fy = st.H - 6; st.dangle = 0; st.ready = true; settle(); return Promise.resolve(); }
     st.fy = -st.KH * 2.4; st.bal.target = 'idle'; st.ready = true; st.bal.init = false;     // il palloncino segue già da su
     return new Promise(res => { st.onLand = () => { st.dangle = 0; st.sy.x = .8; api.wave(3); res(); }; });
+  };
+
+  api.setBig = v => { st.big = v; layout(); };                 // ingrandisce Pallino (l'ingresso di MCLS) o lo riporta alla misura normale
+  api.rise = () => {                                           // sale da sotto lo schermo salutando con la mano alzata
+    layout(); st.fx = stationX(st.station); st.rising = true; st.dangle = 0; st.bal.init = false; st.ready = true; st.hidden = false;
+    if (reduceMotion) { st.fy = st.H - 6; st.rising = false; settle(); return Promise.resolve(); }
+    st.fy = st.H + st.KH * 1.4; api.wave(5);
+    return new Promise(res => { st.onRise = () => { api.wave(3); res(); }; });
   };
 
   /* ---- fumetto: il palloncino si gonfia, il testo si scrive dentro ---- */
@@ -187,7 +196,7 @@
   /* ---- ciclo ---- */
   const placeChoices = () => {
     if (!choicesEl.classList.contains('is-on')) return;
-    const left = st.station === 'left';
+    const left = st.station === 'left' || st.station === 'center';
     choicesEl.style.bottom = '10px'; choicesEl.style.left = left ? (st.fx + 90 * st.ks + 14) + 'px' : 'auto'; choicesEl.style.right = left ? 'auto' : (st.W - st.fx + 90 * st.ks + 14) + 'px';
     choicesEl.style.alignItems = left ? 'flex-start' : 'flex-end';
   };
@@ -213,6 +222,12 @@
       const g = st.H - 6, rem = g - st.fy;
       st.fy += clamp(rem * 1.6, 70, 360) * dt;
       if (rem < 2) { st.fy = g; if (st.onLand) { const f = st.onLand; st.onLand = null; f(); } }
+    }
+    /* salita da sotto */
+    if (st.rising) {
+      const g = st.H - 6, rem = st.fy - g;
+      st.fy -= clamp(rem * 2.4, 80, 560) * dt;
+      if (rem < 2) { st.fy = g; st.rising = false; if (st.onRise) { const f = st.onRise; st.onRise = null; f(); } }
     }
     /* salto */
     st.hop.v += 2600 * dt; st.hop.y += st.hop.v * dt;

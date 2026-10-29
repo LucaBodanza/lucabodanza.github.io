@@ -59,7 +59,7 @@
   $('#ticker').innerHTML = run + run;                       // due copie: lo scorrimento a -50% è senza stacchi
 
   $('#hero-stats').innerHTML = [
-    ['7+', 'esperienze di lavoro', 'tra stage, collaborazioni e agenzie'],
+    ['8', 'esperienze di lavoro', 'tra stage, collaborazioni e agenzie'],
     [CASES.length, 'case history', 'raccontate per intero'],
     [A.items.length, 'lavori in archivio', 'oltre alle case history'],
     [LG.items.length, 'loghi progettati', 'tra brand, monogrammi e pittogrammi'],

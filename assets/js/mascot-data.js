@@ -6,6 +6,7 @@ window.PALLINO_TEXT = {
   name: 'Pallino',
   greet: ['Ciao! Io sono Pallino.', 'In MCLS c’è un’azienda per ogni settore.', 'Ti accompagno a spasso? Scegli tu.'],
   back: ['Rieccoti!', 'Da dove riprendiamo?'],
+  intro: { greet: ['Ciao! Io sono Pallino.', 'Benvenuto in MCLS: qui c’è un’azienda per ogni settore.', 'Da dove cominciamo?'] },
   menu: ['Cosa vuoi fare?'],
   quiet: ['Va bene! Se ti serve, tocca me o il palloncino.'],
   brand: ['Ti porto da {name}.', '{sector}.'],            // {name} e {sector}: l’azienda scelta a caso

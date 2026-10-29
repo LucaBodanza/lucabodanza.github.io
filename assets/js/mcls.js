@@ -25,8 +25,8 @@
     ${mk('pinwheel', 'mh__pin mh__pin--a')}${mk('pinwheel', 'mh__pin mh__pin--b')}
     <div class="container mh__in">
       <div class="mh__txt">
-        <p class="eyebrow" data-t="mcls.hero.eyebrow">Il mio studio · 2022 — 2026</p>
         <h1 class="mh__logo" aria-label="MCLS — ${M.payoff}">${mk('logotype', 'mh__logotype')}</h1>
+        <p class="eyebrow" data-t="mcls.hero.eyebrow">Il mio studio · 2022 — 2026</p>
         <p class="mh__lead" data-t="mcls.hero.lead">MCLS è il mio studio personale: il laboratorio dove progetto per sfogo creativo e per allenare competenze a 360°. Qui vive un sogno surreale: un’azienda per ogni settore, ognuna con il suo logotipo e il suo brand manual completo.</p>
         <p class="mh__note" data-t="mcls.hero.note">Sono tutti progetti miei, nati senza committente.</p>
         <ul class="mh__stats">
@@ -62,7 +62,7 @@
     <div class="atl atl--first" data-sec="segni">
       <div class="atl__h"><div><p class="eyebrow" data-t="mcls.segni.eyebrow">Archivio</p><h2 class="title" data-t="mcls.segni.title">Monogrammi<br><em>&amp; pittogrammi</em></h2>
         <p class="lead" data-t="mcls.segni.lead">Ogni segno in tre versioni — nero su bianco, bianco su nero e traccia (solo il contorno). Cambia versione con i tre pallini.</p></div>
-        <span class="atl__all"><span data-t="mcls.segni.all">Tutti</span><span class="atl__alldots"></span></span></div>
+        </div>
       <div class="filters atl__cats" role="group" aria-label="Tipo di segno"></div>
       <ul class="lg-grid atl__grid"></ul>
       <p class="atl__more"><button class="btn" type="button" data-more><span class="btn__label" data-t="mcls.segni.more">Mostra altri segni</span></button></p>
@@ -85,7 +85,6 @@
   /* — segni: gli stessi tre pallini del UI Kit — */
   const marks = MK.items.map(m => ({ ...m, kind: 'mark' })), mById = new Map(marks.map(m => [m.id, m]));
   const st = { type: 'all', shown: 15, mode: 0, modes: new Map(marks.map(m => [m.id, 0])) };
-  const ALL_DOTS = { kind: 'mark', k: [] };
   const mList = () => marks.filter(m => st.type === 'all' || m.type === st.type);
   const chips = (list, cur) => list.map(([k, l]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${k === cur}" data-t="mcls.chip.${k}">${l}</button>`).join('');
   const drawM = () => {
@@ -94,13 +93,11 @@
     const list = mList();
     $('.atl__grid', el).innerHTML = list.slice(0, st.shown).map(m => LT.tile(m, st.modes.get(m.id), TXT.types[m.type] || m.type)).join('');
     $$('.reveal', el).forEach(r => r.classList.add('is-in'));
-    $('.atl__alldots', el).innerHTML = LT.dots(ALL_DOTS, st.mode, 'Versione di tutti i segni');
     $('[data-more]', el).hidden = st.shown >= list.length;
   };
 
   const setAllMode = m => {
     st.mode = m; marks.forEach(x => st.modes.set(x.id, m));
-    $('#segni .atl__alldots').innerHTML = LT.dots(ALL_DOTS, m, 'Versione di tutti i segni');
     $$('#segni .lg-item').forEach(li => LT.update(li, mById.get(li.dataset.id), m));
   };
 
@@ -109,8 +106,6 @@
     if (e.target.closest('.dpanel__x')) { sel = null; drawD(false); $('#settori .dists').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' }); return; }
     const chip = e.target.closest('#segni .chip'); if (chip) { st.type = chip.dataset.k; st.shown = 15; drawM(); return; }
     if (e.target.closest('#segni [data-more]')) { st.shown += 15; drawM(); return; }
-    const all = e.target.closest('#segni .atl__alldots .lg-dot');
-    if (all) setAllMode(+all.dataset.m);
   });
   LT.bind(main, { item: id => mById.get(id), getMode: it => st.modes.get(it.id), setMode: (it, m) => st.modes.set(it.id, m),
     open: it => { const vis = mList(); Lightbox.open({ title: TXT.lightboxTitle, tag: TXT.lightboxTag, index: Math.max(0, vis.findIndex(x => x.id === it.id)),

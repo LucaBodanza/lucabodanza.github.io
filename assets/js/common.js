@@ -7,7 +7,7 @@
   /* Menu a schermo intero ------------------------------------------------------------------------ */
   const isHome = /(^|\/)(index\.html)?$/.test(location.pathname);
   const href = h => /^[#?]/.test(h) ? (isHome && h.startsWith('#') ? '' : 'index.html') + h : h;      // '#…' e '?…' sono della home; 'mcls.html' è una pagina a sé
-  const NAV = [['#lavori', 'Lavori', 'lavori'], ['#chi-sono', 'Chi sono', 'chi-sono'], ['#storia', 'Storia', 'storia'], ['mcls.html', 'MCLS', 'mcls'], ['#competenze', 'Formazione', 'formazione'], ['#contatti', 'Contatti', 'contatti']];
+  const NAV = [['#lavori', 'Lavori', 'lavori'], ['#chi-sono', 'Chi sono', 'chi-sono'], ['#storia', 'Storia', 'storia'], ['mcls.html', 'MCLS', 'mcls'], ['#contatti', 'Contatti', 'contatti']];
   const cases = (window.CASES || []).map(c => `<li><a href="case.html?c=${c.slug}">${c.title}</a></li>`).join('');
   const menu = document.createElement('div');
   menu.className = 'menu'; menu.id = 'menu-overlay'; menu.setAttribute('role', 'dialog'); menu.setAttribute('aria-modal', 'true'); menu.setAttribute('aria-label', 'Menu'); menu.inert = true;
@@ -53,11 +53,12 @@
   const E = 'cubic-bezier(.76, 0, .24, 1)';
   let leaving = false;
   const isPortal = u => /(^|\/)mcls\.html$/.test(new URL(u, location.href).pathname);
+  const inWorld = u => /(^|\/)(mcls|brand)\.html$/.test(new URL(u, location.href).pathname);      // dentro il mondo MCLS (settori ↔ brand manual) si usa il sipario normale
   const portalEl = () => document.querySelector('.portal') || document.body.appendChild(Object.assign(document.createElement('div'), { className: 'portal', innerHTML: '<i class="portal__w mk" style="-webkit-mask-image:url(assets/img/mcls/wordmark.svg);mask-image:url(assets/img/mcls/wordmark.svg)"></i>' }));
   const go = (url, at) => {
     if (reduceMotion || leaving) { location.href = url; return; }
     leaving = true; setMenu(false);
-    if (isPortal(url) && !isPortal(location.href)) {             // voce MCLS: il portale blu si apre dal punto del clic
+    if (isPortal(url) && !inWorld(location.href)) {              // voce MCLS: il portale blu si apre dal punto del clic
       try { sessionStorage.setItem('portal', '1'); } catch {}
       const p = portalEl(); p.style.setProperty('--px', `${at ? at.x : innerWidth / 2}px`); p.style.setProperty('--py', `${at ? at.y : innerHeight / 2}px`);
       p.getBoundingClientRect(); p.classList.add('is-on');
@@ -82,18 +83,10 @@
     })), Math.max(0, (internal ? 150 : 1000) - performance.now()));
     document.readyState === 'complete' ? open() : addEventListener('load', open, { once: true });
   } else { root.classList.remove('pt-enter'); if (!root.classList.contains('pt-portal')) setTimeout(announce, 60); }
-  /* Arrivo dal portale (pagina MCLS): il cerchio blu con "MCLS" si richiude al centro e apre la pagina. */
+  /* Arrivo dal portale (pagina MCLS): niente seconda animazione. La schermata blu è già lì e continua con l'ingresso di MCLS
+     (logo → scritta sul tracciato → Pallino sale e saluta), gestito da guide.js; qui si toglie solo il segnaposto se non serve. */
   try { sessionStorage.removeItem('portal'); } catch {}
-  if (root.classList.contains('pt-portal') && !reduceMotion) {
-    const p = document.querySelector('.portal'), w = p && p.querySelector('.portal__w'), EP = 'cubic-bezier(.7, 0, .2, 1)';
-    const open = () => setTimeout(() => requestAnimationFrame(() => requestAnimationFrame(() => {
-      root.classList.add('portal-open');
-      p.style.transition = `clip-path 1100ms ${EP}`; p.style.clipPath = 'circle(0% at 50% 40%)';
-      w.style.transition = `opacity 520ms ease, transform 1100ms ${EP}`; w.style.opacity = '0'; w.style.transform = 'scale(2.2)';
-      setTimeout(() => { root.classList.remove('pt-portal', 'portal-open'); p.removeAttribute('style'); w.removeAttribute('style'); announce(); }, 1250);
-    })), Math.max(0, 450 - performance.now()));
-    document.readyState === 'complete' ? open() : addEventListener('load', open, { once: true });
-  } else root.classList.remove('pt-portal');
+  if (reduceMotion) root.classList.remove('pt-portal');
   addEventListener('pageshow', e => { if (e.persisted) { leaving = false; curtain.style.transition = 'none'; curtain.style.clipPath = ''; root.style.overflow = ''; document.querySelector('.portal')?.classList.remove('is-on'); } });
   document.addEventListener('click', e => {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;

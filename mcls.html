@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
   <title data-t="meta.mcls.title">MCLS — More Creativity, Less Stress — Luca Bodanza</title>
   <meta name="description" data-ta="content:meta.mcls.description" content="MCLS è lo studio personale di Luca Bodanza: un’azienda per ogni settore, ognuna con il suo logotipo e il suo brand manual completo, più l’archivio dei monogrammi e dei pittogrammi.">
   <meta name="theme-color" content="#001E87">
@@ -12,29 +13,41 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/style.css?v=66">
-  <link rel="stylesheet" href="assets/css/glassmorphism.css?v=66">
+  <link rel="stylesheet" href="assets/css/style.css?v=71">
+  <link rel="stylesheet" href="assets/css/glassmorphism.css?v=71">
 
   <!-- tema; se si arriva dal portale (voce MCLS) l'ingresso è il portale blu, altrimenti il sipario LB. -->
-  <script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}document.documentElement.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches){var p=0;try{p=sessionStorage.getItem('portal')}catch(e){}document.documentElement.classList.add(p?'pt-portal':'pt-enter')}</script>
-  <script src="assets/js/brands.js?v=66" defer></script>
-  <script src="assets/js/marks.js?v=66" defer></script>
-  <script src="assets/js/mcls-data.js?v=66" defer></script>
-  <script src="assets/js/texts.js?v=66" defer></script>
-  <script src="assets/js/mascot-data.js?v=66" defer></script>
-  <script src="assets/js/site-data.js?v=66" defer></script>
-  <script src="assets/js/site.js?v=66" defer></script>
-  <script src="assets/js/logo-tile.js?v=66" defer></script>
-  <script src="assets/js/lightbox.js?v=66" defer></script>
-  <script src="assets/js/common.js?v=66" defer></script>
-  <script src="assets/js/mcls.js?v=66" defer></script>
-  <script src="assets/js/mascot-rig.js?v=66" defer></script>
-  <script src="assets/js/mascot.js?v=66" defer></script>
-  <script src="assets/js/guide.js?v=66" defer></script>
+  <script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}document.documentElement.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches){var back=/[?&]d=|#/.test(location.search+location.hash);document.documentElement.classList.add(back?'pt-enter':'pt-portal')}</script>
+  <script src="assets/js/brands.js?v=71" defer></script>
+  <script src="assets/js/marks.js?v=71" defer></script>
+  <script src="assets/js/mcls-data.js?v=71" defer></script>
+  <script src="assets/js/texts.js?v=71" defer></script>
+  <script src="assets/js/mascot-data.js?v=71" defer></script>
+  <script src="assets/js/site-data.js?v=71" defer></script>
+  <script src="assets/js/site.js?v=71" defer></script>
+  <script src="assets/js/logo-tile.js?v=71" defer></script>
+  <script src="assets/js/lightbox.js?v=71" defer></script>
+  <script src="assets/js/common.js?v=71" defer></script>
+  <script src="assets/js/mcls.js?v=71" defer></script>
+  <script src="assets/js/mascot-rig.js?v=71" defer></script>
+  <script src="assets/js/mascot.js?v=71" defer></script>
+  <script src="assets/js/guide.js?v=71" defer></script>
 </head>
 <body class="mcls-page">
   <div class="curtain" aria-hidden="true"><span>LB<i>.</i></span></div>
-  <div class="portal" aria-hidden="true"><i class="portal__w mk" style="-webkit-mask-image:url(assets/img/mcls/wordmark.svg);mask-image:url(assets/img/mcls/wordmark.svg)"></i></div>
+  <div class="portal" aria-hidden="true">
+    <div class="portal__stage">
+      <svg class="portal__ring" viewBox="0 0 1000 560" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="mi-ell" d="M 500 50 A 450 230 0 1 1 499.9 50" fill="none"/>
+          <mask id="mi-mask" maskUnits="userSpaceOnUse" x="-100" y="-100" width="1200" height="760"><path class="mi-mask__p" d="M 500 50 A 450 230 0 1 1 499.9 50" pathLength="1" fill="none" stroke="#fff" stroke-width="130"/></mask>
+        </defs>
+        <g mask="url(#mi-mask)"><text><textPath href="#mi-ell" textLength="2170" lengthAdjust="spacing" data-t="mcls.intro.ring">More Creativity, Less Stress · More Creativity, Less Stress · </textPath></text></g>
+      </svg>
+      <i class="portal__w mk" style="-webkit-mask-image:url(assets/img/mcls/wordmark.svg);mask-image:url(assets/img/mcls/wordmark.svg)"></i>
+    </div>
+    <button class="portal__skip" type="button" hidden data-t="mcls.intro.skip">Entra ↓</button>
+  </div>
   <a class="skip" href="#mcls" data-t="ui.skip">Vai ai contenuti</a>
 
   <header class="nav glass">
