@@ -140,4 +140,10 @@
     });
     document.addEventListener('pointerleave', () => cur.classList.remove('is-on'));
   }
+
+  /* Animazioni infinite (girandole, striscia scorrevole): si fermano quando l'elemento esce dallo schermo */
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('is-off', !e.isIntersecting)), { rootMargin: '80px' });
+    document.querySelectorAll('.mh, .ticker').forEach(n => io.observe(n));
+  }
 })();

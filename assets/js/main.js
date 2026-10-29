@@ -91,8 +91,8 @@
   ];
 
   const items = [
-    ...CASES.map(c => ({ kind: 'case', title: c.title, tags: c.tags, year: c.year, href: `case.html?c=${c.slug}`, img: `${IMG}${siteImg(c.cover)}`, macro: c.macro, origin: CASE_ORIGIN[c.slug] || 'personale' })),
-    ...A.items.map(it => ({ kind: 'arch', title: it.title, tags: [A.macros[it.macro].label, it.sub], year: ORIGINS[it.origin], img: `${IMG}${siteImg(it.cover || `projects/${it.dir}/t-01.jpg`)}`,
+    ...CASES.map(c => ({ kind: 'case', title: c.title, tags: c.tags, year: c.year, href: `case.html?c=${c.slug}`, img: `${IMG}${siteThumb(c.cover)}`, macro: c.macro, origin: CASE_ORIGIN[c.slug] || 'personale' })),
+    ...A.items.map(it => ({ kind: 'arch', title: it.title, tags: [A.macros[it.macro].label, it.sub], year: ORIGINS[it.origin], img: `${IMG}${siteThumb(it.cover || `projects/${it.dir}/t-01.jpg`)}`,
       macro: it.macro, origin: it.origin, dir: it.dir, n: it.n, meta: it.meta, sub: it.sub })),
   ];
   const indexed = items.map((it, i) => [it, i]);

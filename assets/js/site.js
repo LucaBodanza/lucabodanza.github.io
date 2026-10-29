@@ -16,6 +16,7 @@
   const raw = /[?&]__raw=1(&|$)/.test(location.search);
   const TX = raw ? {} : (S.tx || {}), PATHS = raw ? {} : (S.paths || {}), LISTS = raw ? {} : (S.lists || {}), REPL = raw ? [] : (S.repl || []).filter(r => r && r.from && typeof r.to === 'string' && !r.to.includes(r.from));
   window.siteImg = p => map[p] || p;                              // percorso (relativo a assets/img/) dopo le sostituzioni
+  window.siteThumb = p => { const o = siteImg(p); return window.THUMBS && THUMBS.has(o) ? '_t/' + o.replace(/\.[^./]+$/, '') + '.webp' : o; };   // come siteImg, ma l'anteprima leggera se esiste (schede, cartelle, strisce): meno rete e meno RAM
   const has = (list, v) => Array.isArray(list) && list.includes(v);
   const drop = (arr, f) => { for (let i = arr.length - 1; i >= 0; i--) if (f(arr[i])) arr.splice(i, 1); };
   const take = (to, from, keys) => { if (from) keys.forEach(k => { if (from[k] !== undefined && from[k] !== '') to[k] = from[k]; }); };

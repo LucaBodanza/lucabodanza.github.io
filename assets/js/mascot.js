@@ -212,7 +212,7 @@
   api.skip = () => { if (queue && queue.skip && say.classList.contains('is-on')) queue.skip(); };
 
   api.hide = () => { st.hidden = true; root.classList.add('is-hidden'); api.quiet(); };
-  api.show = () => { st.hidden = false; root.classList.remove('is-hidden'); };
+  api.show = () => { st.hidden = false; root.classList.remove('is-hidden'); render(); };
 
   /* ---- ciclo ---- */
   const placeChoices = () => {
@@ -220,6 +220,8 @@
     if (!on && !capOn) return;
     const left = st.station === 'left' || st.station === 'center';
     const x = left ? (st.fx + 90 * st.ks + 14) + 'px' : 'auto', r = left ? 'auto' : (st.W - st.fx + 90 * st.ks + 14) + 'px';
+    const key = [on, capOn, x, r, st.chH, left].join('|');
+    if (key === last.pc) return; last.pc = key;                 // cammina soltanto quando Pallino si sposta
     if (on) {
       choicesEl.style.bottom = '10px'; choicesEl.style.left = x; choicesEl.style.right = r;
       choicesEl.style.alignItems = left ? 'flex-start' : 'flex-end';
@@ -342,11 +344,17 @@
     if (last.string !== p) { last.string = p; gString.setAttribute('d', p); gString.setAttribute('stroke-width', Math.max(1.2, B.stringW * ks * .55).toFixed(2)); }
     /* testo dentro il palloncino */
     const Dpx = 2 * B.r * sc, side = Dpx * .7;
-    say.style.cssText = `left:${f1(bx - side / 2)}px;top:${f1(by2 - side / 2)}px;width:${f1(side)}px;height:${f1(side)}px;font-size:${f1(clamp(side * .112, 12.5, 21))}px;`;
+    /* le posizioni cambiano a ogni fotogramma (il palloncino ondeggia): con "translate" non c'è layout; le misure si scrivono solo quando cambiano */
+    const fs = f1(clamp(side * .112, 12.5, 21)), sd = f1(side), sk = sd + '|' + fs;
+    if (last.sk !== sk) { last.sk = sk; say.style.cssText = `left:0;top:0;width:${sd}px;height:${sd}px;font-size:${fs}px;`; }
+    say.style.translate = `${f1(bx - side / 2)}px ${f1(by2 - side / 2)}px`;
     /* aree cliccabili */
-    hitKid.style.cssText = `left:${f1(st.fx - 70 * ks)}px;top:${f1(st.fy + st.hop.y - K.h * ks)}px;width:${f1(140 * ks)}px;height:${f1(K.h * ks)}px;`;
-    const rO = st.bal.rO || 30;
-    hitBal.style.cssText = `left:${f1(bx - rO)}px;top:${f1(by2 - rO)}px;width:${f1(rO * 2)}px;height:${f1(rO * 2)}px;`;
+    const hk = f1(140 * ks) + '|' + f1(K.h * ks);
+    if (last.hk !== hk) { last.hk = hk; hitKid.style.width = f1(140 * ks) + 'px'; hitKid.style.height = f1(K.h * ks) + 'px'; }
+    hitKid.style.translate = `${f1(st.fx - 70 * ks)}px ${f1(st.fy + st.hop.y - K.h * ks)}px`;
+    const rO = st.bal.rO || 30, hb = f1(rO * 2);
+    if (last.hb !== hb) { last.hb = hb; hitBal.style.width = hb + 'px'; hitBal.style.height = hb + 'px'; }
+    hitBal.style.translate = `${f1(bx - rO)}px ${f1(by2 - rO)}px`;
     placeChoices();
   };
 
@@ -366,7 +374,16 @@
   st.fy = st.H - 6; st.fx = st.tx;
   if (reduceMotion) settle(); else render();
   let raf = 0, prev = 0, running = true;
-  const loop = now => { raf = requestAnimationFrame(loop); if (!prev) prev = now; const ms = now - prev; prev = now; if (running && !document.hidden && !reduceMotion) api.tick(ms); };
+  let acc = 0;
+  const calm = () => !(st.waveT > 0 || st.typing || st.rising || st.dangle > 0 || st.pointTo || st.hop.y < -.5 || Math.abs(st.hop.v) > 5 || Math.abs(st.tx - st.fx) > 1.5 ||
+    Math.abs(st.bs.x - st.bigT) > .0008 || st.bal.fast > 0 || Math.abs(st.flip.x - st.faceDir) > .02 || st.greet);
+  const loop = now => {                                          // raccolto nel pulsante o scheda in secondo piano: non si fa nulla; a riposo bastano 30 fotogrammi al secondo (respiro, sguardo)
+    raf = requestAnimationFrame(loop); if (!prev) prev = now;
+    acc += now - prev; prev = now;
+    if (!running || document.hidden || reduceMotion || st.hidden) { acc = 0; return; }
+    if (acc < 30 && calm()) return;
+    const ms = acc; acc = 0; api.tick(ms);
+  };
   if (!reduceMotion) raf = requestAnimationFrame(loop);
   api.pause = () => { running = false; }; api.resume = () => { running = true; prev = 0; };
   api.layout = layout; api.root = root; api.name = 'Pallino';

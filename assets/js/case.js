@@ -19,6 +19,7 @@
   const all = [];
   const reg = im => { im.g = all.length; all.push(im); return im; };
   const src = f => IMG_BASE + (window.siteImg ? siteImg(f) : f);
+  const thumb = f => IMG_BASE + (window.siteThumb ? siteThumb(f) : f);       // anteprima leggera per strisce e muri (il file intero si apre nel lightbox)
   const cols = n => n === 1 ? 1 : n >= 12 ? 4 : (n === 2 || n === 4) ? 2 : 3;
 
   /* utilità: carattere da Google Fonts per lo specimen, colore del testo sopra un campione */
@@ -43,7 +44,7 @@
   const pagesOf = it => Array.from({ length: it.n }, (_, k) => `${it.dir}/${pad(k + 1)}.jpg`);
   // i cataloghi con back:true sono copertina · pagine interne · retro; gli altri sono una serie di immagini
   const pageLabel = (it, k) => it.back ? (k === 0 ? 'copertina' : k === it.n - 1 ? 'retro' : 'pagina interna') : `immagine ${k + 1} di ${it.n}`;
-  const strip = it => pagesOf(it).map((p, k) => `<button class="cat__page" type="button" data-i="${k}" aria-label="${it.name} — ${pageLabel(it, k)}"><img src="${src(p)}" alt="${it.name} — ${pageLabel(it, k)}" loading="lazy" decoding="async"></button>`).join('');
+  const strip = it => pagesOf(it).map((p, k) => `<button class="cat__page" type="button" data-i="${k}" aria-label="${it.name} — ${pageLabel(it, k)}"><img src="${thumb(p)}" alt="${it.name} — ${pageLabel(it, k)}" loading="lazy" decoding="async"></button>`).join('');
   const catCap = it => `<b>${it.name}</b> · ${it.meta} · ${it.n} <span data-t="case.ui.${it.back ? 'pages' : 'images'}">${it.back ? 'pagine' : 'immagini'}</span> <span data-t="case.ui.preview">in anteprima</span>`;
 
   /* un renderer per tipologia di sviluppo */
@@ -109,7 +110,7 @@
     wall(_, imgs) {
       const n = imgs.length <= 6 ? 3 : 5;
       return `<ul class="wallfull wallfull--${n} col-12">${imgs.map((im, k) => `
-        <li class="wall__i reveal" style="--d:${(k % n) * 60}ms"><button class="fig__btn" type="button" data-g="${reg(im).g}" aria-label="${im.lb || im.cap || c.title}"><img src="${src(im.src)}" alt="${im.alt || im.cap || c.title}" loading="lazy" decoding="async"></button></li>`).join('')}</ul>`;
+        <li class="wall__i reveal" style="--d:${(k % n) * 60}ms"><button class="fig__btn" type="button" data-g="${reg(im).g}" aria-label="${im.lb || im.cap || c.title}"><img src="${thumb(im.src)}" alt="${im.alt || im.cap || c.title}" loading="lazy" decoding="async"></button></li>`).join('')}</ul>`;
     },
   };
 

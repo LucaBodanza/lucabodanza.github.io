@@ -62,6 +62,8 @@
       const n = [...tp.textContent].length, L = tp.getComputedTextLength(), C = 2 * Math.PI * 250;
       if (n && L) tx.setAttribute('letter-spacing', ((C - L) / n).toFixed(3));
     } catch {}
+    const stage = $('.portal__stage'), w = $('.portal__w');          // di quanto si rimpicciolisce il logo per stare dentro il cerchio (scala: la fa la scheda video, niente layout)
+    if (stage && w && w.offsetWidth) stage.style.setProperty('--ls', Math.min(1, stage.offsetWidth * .56 / w.offsetWidth).toFixed(4));
   };
   const finishIntro = (o = {}) => {                              // carry: il blu si richiude attorno a Pallino, che resta in scena (ti ha portato dentro)
     if (!inIntro) return Promise.resolve();
@@ -96,7 +98,7 @@
     try { history.scrollRestoration = 'manual'; } catch {} scrollTo(0, 0);       // l'ingresso parte sempre dall'alto
     const p = portal(); if (p) p.setAttribute('aria-hidden', 'false');
     hide(true); P.hold(false); P.greet(true); P.setBig(introBig()); P.walkTo(introStation(), { instant: true });
-    addEventListener('resize', () => { if (inIntro) { P.setBig(introBig()); P.walkTo(introStation(), { instant: true }); } });
+    addEventListener('resize', () => { if (inIntro) { P.setBig(introBig()); P.walkTo(introStation(), { instant: true }); fitRing(); } });
     const skip = $('.portal__skip'); if (skip) skip.onclick = () => { tourId++; finishIntro().then(() => hide()); };
     addEventListener('keydown', e => { if (e.key === 'Escape' && inIntro) { tourId++; finishIntro().then(() => hide()); } });
     try { await Promise.race([document.fonts.ready, wait(1200)]); } catch {}
