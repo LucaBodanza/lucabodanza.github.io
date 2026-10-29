@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="203.82 154.45 188.36 286.11"><defs>
+<clipPath id="m36-clip_1">
+<path transform="matrix(1,0,0,-1,0,595.276)" d="M0 595.276H595.276V0H0Z" />
+</clipPath>
+</defs>
+<g>
+<path transform="matrix(1,0,0,-1,389.370,346.375)" d="M0 0V127.057H-31.341V12.98L-31.345 12.975-91.375-47.055-151.403 12.973V127.057H-182.744V-.002H-182.743L-182.745-.005-113.535-69.215-91.375-91.375-69.206-69.215 .005-.005Z" style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:1.1444;stroke-linejoin:round" />
+<g clip-path="url(#m36-clip_1)">
+<path transform="matrix(1,0,0,-1,353.996,173.521)" d="M0 0V16.26H-22.15L-22.16 16.27-56-17.57-89.84 16.27-89.85 16.26H-111.99V0C-111.99-1.81-111.99-3.73-112-5.89L-78.16-39.73-55.99-61.89-33.83-39.73 .01-5.89C.01-3.73 0-1.81 0 0" style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:1.1444;stroke-linejoin:round" />
+<path transform="matrix(1,0,0,-1,298.005,241.478)" d="M0 0-15.676 15.668V-104.899H-15.678C-12.618-107.949-10.228-110.339-7.838-112.729-5.458-115.109-3.068-117.499-.008-120.559 6.112-114.439 9.542-111.009 15.652-104.899H15.666V15.666Z" style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:1.1444;stroke-linejoin:round" />
+</g>
+</g>
+</svg>

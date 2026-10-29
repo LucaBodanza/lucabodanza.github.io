@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="95.08 238.9 375.84 118.21"><defs>
+<clipPath id="valkirie-boutique-lockup-clip_1">
+<path transform="matrix(1,0,0,-1,0,595.276)" d="M0 595.276H566.929V0H0Z" />
+</clipPath>
+</defs>
+<g>
+<path transform="matrix(1,0,0,-1,0,595.276)" stroke-width="5" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" d="M98.764 352.695H467.236V241.857H98.764Z" style="stroke:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,0,595.276)" d="M98.764 262.713H467.236V241.857H98.764Z" style="fill:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,0,595.276)" stroke-width="5" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" d="M98.764 262.713H467.236V241.857H98.764Z" style="stroke:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,132.820,266.079)" d="M0 0 15.444-32.301 29.784 0H37.127L16.098-47.434H10.755L-11.858 0Z" style="fill:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,182.184,295.725)" d="M0 0H14.065L7.136 15.099ZM11.652 30.612 33.576-17.098H21.855L15.995-4.343H-2.172L-8.308-17.098H-16.098L6.687 30.612Z" style="fill:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,222.311,266.079)" d="M0 0H11.48V-41.953H35.334V-46.745H0Z" style="fill:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,265.022,266.079)" d="M0 0H11.513V-17.581L32.266 0H41.16L17.754-19.787 47.4-46.745H33.508L11.513-26.716V-46.745H0Z" style="fill:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,0,595.276)" d="M317.765 329.197H329.210V282.452H317.765Z" style="fill:#FFFFFF" />
+<g clip-path="url(#valkirie-boutique-lockup-clip_1)">
+<path transform="matrix(1,0,0,-1,352.410,287.589)" d="M0 0H2.481C3.883 0 5.182 .195 6.377 .586 7.571 .977 8.606 1.534 9.479 2.258 10.353 2.982 11.036 3.872 11.531 4.93 12.024 5.987 12.272 7.182 12.272 8.515 12.272 9.756 12.082 10.894 11.703 11.927 11.324 12.962 10.801 13.852 10.135 14.599 9.468 15.346 8.664 15.926 7.722 16.34 6.779 16.754 5.756 16.961 4.653 16.961H0ZM-11.48 21.511H6.101C9.135 21.511 11.783 21.195 14.047 20.563 16.31 19.931 18.195 19.046 19.701 17.909 21.206 16.771 22.338 15.421 23.096 13.858 23.855 12.295 24.234 10.595 24.234 8.756 24.234 7.423 23.975 6.164 23.459 4.981 22.941 3.797 22.217 2.706 21.287 1.706 20.355 .707 19.229-.178 17.909-.948 16.586-1.718 15.133-2.356 13.547-2.861L30.198-25.234H17.719L2.034-4.102H0V-25.234H-11.48Z" style="fill:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,0,595.276)" d="M386.951 329.197H398.396V282.452H386.951Z" style="fill:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,445.037,266.079)" d="M0 0V-3.999H-23.441V-19.408H-3.964V-23.407H-23.441V-41.953H0V-46.745H-34.921V0Z" style="fill:#FFFFFF" />
+</g>
+</g>
+</svg>

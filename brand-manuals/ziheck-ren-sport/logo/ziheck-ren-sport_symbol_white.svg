@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-0.83 -0.83 84.61 33.0"><defs>
+<clipPath id="ziheck-ren-sport-symbol-clip_1">
+<path transform="matrix(1,0,0,-1,0,31.345)" d="M0 31.345H82.951V0H0Z" />
+</clipPath>
+</defs>
+<g>
+<path transform="matrix(1,0,0,-1,46.502,0)" d="M0 0V-12.925H-15.716V-17.777H0V-31.345H5.453V0Z" style="fill:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,0,31.345)" d="M30.786 13.568H25.333V8.114H30.786Z" style="fill:#FFFFFF" />
+<g clip-path="url(#ziheck-ren-sport-symbol-clip_1)">
+<path transform="matrix(1,0,0,-1,3.090,31.280)" d="M0 0C-1.631 0-3.091 .945-3.091 2.791-3.091 3.607-2.705 4.38-1.975 5.11L18.765 26.021H-2.705V31.216H24.604C26.192 31.216 27.695 30.271 27.695 28.425 27.695 27.609 27.31 26.836 26.579 26.106L5.84 5.195H27.566V0Z" style="fill:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,74.621,31.280)" d="M0 0-17.476 13.74C-18.42 14.47-18.592 15.157-18.592 16.016-18.592 16.96-18.334 17.647-17.218 18.506L-.687 31.216H7.687L-12.752 15.973 8.33 0Z" style="fill:#FFFFFF" />
+<path transform="matrix(1,0,0,-1,30.785,7.467)" d="M0 0V-5.46H-5.45L-.04 0Z" style="fill:#FFFFFF" />
+</g>
+</g>
+</svg>

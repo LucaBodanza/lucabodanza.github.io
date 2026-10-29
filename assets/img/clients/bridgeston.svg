@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="80.71" height="72.59" viewBox="153.15 65.90 80.71 72.59">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_1728" data-name="Rectangle 1728" width="79.707" height="71.602" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Bridgestone" transform="translate(-61 -1893)">
+    
+    <g id="Bridgestone-2" data-name="Bridgestone" transform="translate(214.637 1959.428)">
+      <g id="Group_1968" data-name="Group 1968" clip-path="url(#clip-path)">
+        <path id="Path_823" data-name="Path 823" d="M15.04,40.98,24.785,6.8A9.685,9.685,0,0,1,33.539.072H63.346a.5.5,0,0,1,.276.915A333.518,333.518,0,0,0,15.885,41.425a.489.489,0,0,1-.844-.444" transform="translate(-5.25 -0.025)" fill="#d9000d"/>
+        <path id="Path_824" data-name="Path 824" d="M33.34,61.475,42.983,27.74a.5.5,0,0,0-.816-.529A359.664,359.664,0,0,0,.139,70.737a.5.5,0,0,0,.336.864H42.222c17.6,0,27.244-5.46,30.735-18.489C75.8,42.5,70.242,35.26,61.357,33.389c-.157-.034-.3-.333,0-.386C68.874,31.72,76.45,28.7,79.152,17.741,82.076,5.883,73.009-.622,62.576.047L46.623,55.916a8.024,8.024,0,0,1-7.162,5.559Z" transform="translate(0 0)" fill="#161615"/>
+      </g>
+    </g>
+  </g>
+</svg>

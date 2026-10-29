@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="34.16 230.36 56.01 44.75"><defs>
+<clipPath id="4-studio-monogram-clip_1">
+<path transform="matrix(1,0,0,-1,0,500)" d="M0 500H500V0H0Z" />
+</clipPath>
+</defs>
+<g>
+<g clip-path="url(#4-studio-monogram-clip_1)">
+<path transform="matrix(1,0,0,-1,79.641,274.560)" d="M0 0V14.571H.06V16.704H-28.137C-31.217 16.704-34.03 17.444-36.577 18.984-39.095 20.495-41.139 22.509-42.649 25.056-44.159 27.603-44.93 30.417-44.93 33.497V43.655H-34.859V33.497C-34.859 31.66-34.179 30.061-32.875 28.758-31.543 27.425-29.973 26.773-28.137 26.773H-.089V43.655H9.981V0Z" style="fill:#FFFFFF" />
+</g>
+</g>
+</svg>

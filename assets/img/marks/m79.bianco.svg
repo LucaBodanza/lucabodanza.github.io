@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="156.95 131.46 186.10 237.07"><defs>
+<clipPath id="m79-clip_1">
+<path transform="matrix(1,0,0,-1,0,500)" d="M0 500H500V0H0Z" />
+</clipPath>
+</defs>
+<g>
+<path transform="matrix(1,0,0,-1,159.273,133.786)" d="M0 0V-188.829H19.258V-19.258H162.246V-65.67H48.106V-188.829H118.155V-125.816H162.039V-145.075H137.7V-188.829H156.958V-164.333H181.454V-106.298H98.897V-169.44H67.365V-84.929H181.454V0Z" style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:0.9483;stroke-linejoin:round" />
+<path transform="matrix(1,0,0,-1,191.429,334.056)" d="M0 0V-6.891H-25.266V-12.633H-2.297V-19.523H-25.266V-32.156H-32.156V0Z" style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:0.9483;stroke-linejoin:round" />
+<g clip-path="url(#m79-clip_1)">
+<path transform="matrix(1,0,0,-1,202.914,345.541)" d="M0 0V-9.188C0-12.251 1.531-13.781 4.594-13.781H13.781C16.844-13.781 18.375-12.251 18.375-9.188V0C18.375 3.063 16.844 4.594 13.781 4.594H4.594C1.531 4.594 0 3.063 0 0M-6.891-9.188V0C-6.891 7.656-3.063 11.484 4.594 11.484H13.781C21.438 11.484 25.266 7.656 25.266 0V-9.188C25.266-16.844 21.438-20.672 13.781-20.672H4.594C-3.063-20.672-6.891-16.844-6.891-9.188" style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:0.9483;stroke-linejoin:round" />
+<path transform="matrix(1,0,0,-1,258.039,343.244)" d="M0 0C0 1.531-.766 2.297-2.297 2.297H-18.375V-3.445H-2.297C-.766-3.445 0-2.68 0-1.148ZM-2.297 9.188C3.828 9.188 6.891 6.124 6.891 0V-1.148C6.891-7.273 3.828-10.336-2.297-10.336H-3.445L9.188-22.969H-.551L-13.184-10.336H-18.375V-22.969H-25.266V9.188Z" style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:0.9483;stroke-linejoin:round" />
+<path transform="matrix(1,0,0,-1,301.679,334.056)" d="M0 0V-6.891H-25.266V-12.633H-2.297V-19.523H-25.266V-25.266H0V-32.156H-32.156V0Z" style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:0.9483;stroke-linejoin:round" />
+<path transform="matrix(1,0,0,-1,331.539,343.244)" d="M0 0C0 1.531-.766 2.297-2.297 2.297H-18.375V-3.445H-2.297C-.766-3.445 0-2.68 0-1.148ZM-2.297 9.188C3.828 9.188 6.891 6.124 6.891 0V-1.148C6.891-7.273 3.828-10.336-2.297-10.336H-3.445L9.188-22.969H-.551L-13.184-10.336H-18.375V-22.969H-25.266V9.188Z" style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:0.9483;stroke-linejoin:round" />
+</g>
+</g>
+</svg>
