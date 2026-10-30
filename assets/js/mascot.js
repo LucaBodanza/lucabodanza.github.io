@@ -18,7 +18,7 @@
   const rot = (x, y, a, cx, cy) => { const c = Math.cos(rad(a)), s = Math.sin(rad(a)), dx = x - cx, dy = y - cy; return [cx + dx * c - dy * s, cy + dx * s + dy * c]; };
   const f1 = v => Math.round(v * 10) / 10;
   const wrapDeg = a => ((a + 540) % 360) - 180;
-  const GREET = 10;                                              // di quanti gradi si alza il braccio rispetto a quando regge il palloncino (poi saluta ±18°, senza toccare la testa)
+  const GREET = 0;                                              // di quanti gradi si alza il braccio rispetto a quando regge il palloncino (poi saluta ±18°, senza toccare la testa)
 
   /* molla critica: la posizione segue il bersaglio senza rimbalzi eccessivi */
   const spring = (v, target, k, dt, damp = 1) => { const c = 2 * Math.sqrt(k) * damp; v.v += (k * (target - v.x) - c * v.v) * dt; v.x += v.v * dt; return v.x; };
@@ -69,7 +69,7 @@
 
   /* ---- stato ---- */
   const st = {
-    W: innerWidth, H: 600, ks: .3, big: 1, bigT: 1, bs: S(1), held: true, greet: false, chH: 0, rising: false, fx: 0, fy: 0, tx: 0, station: 'right', t: 0, hidden: false,
+    W: innerWidth, H: 600, ks: .3, big: 1, bigT: 1, bs: S(1), rest: S(0), restT: 0, stationPx: 0, chDx: 90, chRight: false, held: true, greet: false, chH: 0, rising: false, fx: 0, fy: 0, tx: 0, station: 'right', t: 0, hidden: false,
     flip: S(1), faceDir: 1, lean: S(0), sy: S(1), sx: S(1), hop: { y: 0, v: 0 },
     armL: S(0), armR: S(0), legL: S(0), legR: S(0), head: S(0), look: { x: S(0), y: S(0) },
     walkPhase: 0, walkAmt: S(0), walkSpeed: 0,
@@ -87,11 +87,11 @@
     sizeKid();
     svg.setAttribute('viewBox', `0 0 ${st.W} ${st.H}`);
     root.style.setProperty('--mh', st.H + 'px');
-    st.fy = st.H - 6;
+    st.fy = st.H - 6 + st.rest.x;
     const x = stationX(st.station); st.tx = x; if (!st.ready || reduceMotion) st.fx = x;
     if (reduceMotion && api.tick) settle();
   };
-  const stationX = name => name === 'center' ? st.W / 2 : name === 'left' ? 18 + 150 * st.ks : st.W - 18 - 150 * st.ks;
+  const stationX = name => name === 'px' ? st.stationPx : name === 'center' ? st.W / 2 : name === 'left' ? 18 + 150 * st.ks : st.W - 18 - 150 * st.ks;
 
   /* ---- geometria: da coordinate del disegno a pixel del contenitore (e ritorno) ---- */
   const kidToScreen = (x, y, armAng = 0, viaArmL = false) => {
@@ -124,7 +124,13 @@
     st.bigT = v;
     if (!smooth || reduceMotion) { st.bs.x = v; st.bs.v = 0; st.big = v; layout(); }
   };
-  api.greet = on => { st.greet = on !== false; };              // a mano libera: il braccio sta alzato e saluta
+  api.greet = on => { st.greet = on !== false; };
+  api.setRest = (dy, smooth) => {                              // di quanto i piedi stanno sotto il bordo dello schermo (l'ingresso di MCLS: Pallino è tagliato dal bordo); smooth: sale con calma
+    st.restT = dy;
+    if (!smooth || reduceMotion) { st.rest.x = dy; st.rest.v = 0; if (!st.rising && !st.dangle) st.fy = st.H - 6 + dy; }
+  };
+  api.placeX = px => { st.stationPx = px; api.walkTo('px', { instant: true }); };      // posizione libera, in pixel
+  api.setChoices = o => { if ('dx' in o) st.chDx = o.dx; if ('right' in o) st.chRight = !!o.right; last.pc = null; placeChoices(); };       // dove stanno le scelte rispetto a Pallino              // a mano libera: il braccio sta alzato e saluta
   api.hold = (on, opts = {}) => {                              // con o senza palloncino; drop: il palloncino arriva dall'alto e Pallino lo prende
     st.held = on !== false;
     if (!st.held) return;
@@ -133,8 +139,8 @@
   api.where = () => [st.fx, innerHeight - st.H + st.fy - st.KH * .45];     // il centro di Pallino sullo schermo
   api.rise = () => {                                           // sale da sotto lo schermo, tutto intero, salutando con la mano alzata
     layout(); st.fx = stationX(st.station); st.rising = true; st.dangle = 0; st.bal.init = false; st.ready = true; st.hidden = false;
-    if (reduceMotion) { st.fy = st.H - 6; st.rising = false; settle(); return Promise.resolve(); }
-    st.fy = st.H + st.KH * 1.4; api.wave(5); render();
+    if (reduceMotion) { st.fy = st.H - 6 + st.rest.x; st.rising = false; settle(); return Promise.resolve(); }
+    st.fy = st.H + st.ks * 452 + 30; api.wave(5); render();
     return new Promise(res => { st.onRise = () => { api.wave(3); res(); }; });
   };
 
@@ -218,15 +224,16 @@
   const placeChoices = () => {
     const on = choicesEl.classList.contains('is-on'), capOn = cap.classList.contains('is-on');
     if (!on && !capOn) return;
-    const left = st.station === 'left' || st.station === 'center';
-    const x = left ? (st.fx + 90 * st.ks + 14) + 'px' : 'auto', r = left ? 'auto' : (st.W - st.fx + 90 * st.ks + 14) + 'px';
-    const key = [on, capOn, x, r, st.chH, left].join('|');
+    const left = st.station === 'left' || st.station === 'center' || st.station === 'px';
+    let x = left ? (st.fx + st.chDx * st.ks + 14) + 'px' : 'auto', r = left ? 'auto' : (st.W - st.fx + st.chDx * st.ks + 14) + 'px';
+    if (st.chRight) { x = 'auto'; r = '12px'; }                  // sul telefono le scelte stanno contro il bordo destro
+    const key = [on, capOn, x, r, st.chH, left, st.chRight].join('|');
     if (key === last.pc) return; last.pc = key;                 // cammina soltanto quando Pallino si sposta
     if (on) {
       choicesEl.style.bottom = '10px'; choicesEl.style.left = x; choicesEl.style.right = r;
-      choicesEl.style.alignItems = left ? 'flex-start' : 'flex-end';
+      choicesEl.style.alignItems = left && !st.chRight ? 'flex-start' : 'flex-end';
     }
-    if (capOn) { cap.style.bottom = (st.chH + 30) + 'px'; cap.style.left = x; cap.style.right = r; cap.style.textAlign = left ? 'left' : 'right'; }
+    if (capOn) { cap.style.bottom = (st.chH + 30) + 'px'; cap.style.left = x; cap.style.right = r; cap.style.textAlign = left && !st.chRight ? 'left' : 'right'; }
   };
 
   const settle = () => { for (let i = 0; i < 90; i++) step(1 / 30); render(); };      // con "riduci movimento": va subito nella posizione finale
@@ -253,10 +260,13 @@
     }
     /* salita da sotto */
     if (st.rising) {
-      const g = st.H - 6, rem = st.fy - g;
-      st.fy -= clamp(rem * 2.4, 80, 560) * dt;
+      const g = st.H - 6 + st.rest.x, rem = st.fy - g;
+      st.fy -= clamp(rem * 3.2, 140, 900) * dt;
       if (rem < 2) { st.fy = g; st.rising = false; if (st.onRise) { const f = st.onRise; st.onRise = null; f(); } }
     }
+    /* a terra: i piedi seguono rest (sale con calma quando Pallino torna alla misura normale) */
+    if (Math.abs(st.rest.x - st.restT) > .05 || Math.abs(st.rest.v) > .05) spring(st.rest, st.restT, 55, dt, 1);
+    if (!st.rising && !(st.dangle > 0)) st.fy = st.H - 6 + st.rest.x;
     /* salto */
     st.hop.v += 2600 * dt; st.hop.y += st.hop.v * dt;
     if (st.hop.y >= 0) { if (st.hop.v > 240) st.sy.v += -st.hop.v * .004; st.hop.y = 0; st.hop.v = 0; }

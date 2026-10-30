@@ -47,23 +47,39 @@
   };
   const quiet = async () => { tourId++; P.point(null); if (inIntro) await finishIntro(); hide(); };
 
-  /* ---- l'ingresso: schermata blu → logo → scritta sul cerchio → Pallino sale da sotto e saluta a mano libera; si può già scegliere ----
-     Il palloncino non c'è: lo prende nel momento in cui scegli una risposta, e ti porta dentro MCLS (enter). */
+  /* ---- l'ingresso, come nel disegno di Luca (Context/Schermata_sistemata.jpg): blu con le linee «serpente» dai margini, il logo con l'anello in alto al centro,
+     Pallino che sale da sotto, GRANDE e tagliato dal bordo, e saluta a mano libera; si può già scegliere.
+     Il palloncino non c'è: lo prende nel momento in cui scegli una risposta, e ti porta dentro MCLS (enter). ---- */
   const portal = () => $('.portal');
-  const introBig = () => {                                       // Pallino a circa un quarto dello schermo, più grande del solito
-    const base = Math.min(164, Math.max(104, Math.min(innerHeight * .165, innerWidth * .36)));
-    return Math.min(1.75, Math.max(1.2, Math.min(innerHeight * .27, innerWidth * .6) / base));
+  /* misure di Pallino nel disegno (2000×1125): cima della testa a 51% dell'altezza, tutta la figura (braccia comprese) larga 556 px e centrata, piedi fuori dallo schermo.
+     Dove non c'è posto per le scelte a destra (schermi stretti) la figura si fa più piccola oppure si sposta a sinistra. */
+  const introPlace = () => {
+    const W = innerWidth, H = innerHeight;
+    const ks0 = .747 * H / 454;                                                                    // la misura del disegno
+    const ksCenter = (W / 2 - 224) / 179.75, ksLeft = (W - 201) / 330;                            // quanto può crescere se centrata / se a sinistra, lasciando ~190 px alle scelte
+    const left = ksCenter < ks0 && ksLeft > ksCenter;
+    const ks = Math.max(.3, Math.min(ks0, left ? ksLeft : ksCenter)), KH = ks * 454;
+    const base = Math.min(164, Math.max(104, Math.min(H * .165, W * .36)));
+    P.setBig(KH / base);
+    P.placeX(left ? 12 + 181 * ks : W / 2 + (181 - 150.25) * ks);                                 // centrata: il busto sta un po' a destra del centro della figura (braccio alzato a sinistra)
+    const headTop = Math.max(.5105 * H, H - .78 * KH);
+    P.setRest(headTop + 452 * ks - H + 6);                                                         // piedi sotto il bordo: la testa resta dov'è nel disegno
+    P.setChoices({ dx: 160, right: false });                                                       // le scelte stanno oltre il braccio destro
   };
-  const introStation = () => innerWidth < 700 ? 'left' : 'center';
+  const fitSnakes = () => {                                      // schermo in piedi: il disegno delle linee si gira di 90°, così riempie lo schermo invece di mostrarne una striscia
+    const svg = $('.portal__snakes'), grp = svg && svg.firstElementChild; if (!svg || !grp) return;
+    const portrait = innerHeight > innerWidth * 1.1;
+    svg.setAttribute('viewBox', portrait ? '0 0 1125 2000' : '0 0 2000 1125');
+    if (portrait) grp.setAttribute('transform', 'translate(1125 0) rotate(90)'); else grp.removeAttribute('transform');
+  };
+  const introNormal = smooth => { P.setBig(1, smooth); P.setRest(0, smooth); P.setChoices({ dx: 90, right: false }); };
   const fitRing = () => {                                        // la scritta deve coprire il cerchio per intero: si regola la spaziatura delle lettere
     const tp = $('.portal__ring textPath'), tx = tp && tp.parentNode; if (!tx) return;
     try {
       tx.setAttribute('letter-spacing', '0');
-      const n = [...tp.textContent].length, L = tp.getComputedTextLength(), C = 2 * Math.PI * 250;
+      const n = [...tp.textContent].length, L = tp.getComputedTextLength(), C = 2 * Math.PI * 254;
       if (n && L) tx.setAttribute('letter-spacing', ((C - L) / n).toFixed(3));
     } catch {}
-    const stage = $('.portal__stage'), w = $('.portal__w');          // di quanto si rimpicciolisce il logo per stare dentro il cerchio (scala: la fa la scheda video, niente layout)
-    if (stage && w && w.offsetWidth) stage.style.setProperty('--ls', Math.min(1, stage.offsetWidth * .56 / w.offsetWidth).toFixed(4));
   };
   const finishIntro = (o = {}) => {                              // carry: il blu si richiude attorno a Pallino, che resta in scena (ti ha portato dentro)
     if (!inIntro) return Promise.resolve();
@@ -73,13 +89,13 @@
     if (o.carry) {
       const [x, y] = P.where(); if (p) { p.style.setProperty('--ox', x + 'px'); p.style.setProperty('--oy', y + 'px'); }
       setTimeout(() => html.classList.add('mi-ink'), 320);
-      setTimeout(() => { P.setBig(1, true); P.walkTo('right'); }, 520);
+      setTimeout(() => { introNormal(true); P.walkTo('right'); }, 520);
     } else { P.quiet(); P.hold(true); P.hide(); }
     html.dataset.mi = 'out'; if (p) p.classList.add('mi-out');
     return new Promise(res => setTimeout(() => {
       html.classList.remove('pt-portal', 'mi-live', 'mi-ink'); delete html.dataset.mi; if (p) p.remove();
       try { sessionStorage.removeItem('portal'); } catch {}
-      if (!o.carry) { P.setBig(1); P.walkTo('right', { instant: true }); }
+      if (!o.carry) { introNormal(false); P.walkTo('right', { instant: true }); }
       scrollTo(0, 0); res();
     }, reduceMotion ? 0 : 1000));
   };
@@ -94,19 +110,18 @@
     if (run) run();
   };
   const intro = async () => {
-    inIntro = true; html.classList.add('mi-live'); html.dataset.mi = 'logo';
+    inIntro = true; html.classList.add('mi-live');
     try { history.scrollRestoration = 'manual'; } catch {} scrollTo(0, 0);       // l'ingresso parte sempre dall'alto
     const p = portal(); if (p) p.setAttribute('aria-hidden', 'false');
-    hide(true); P.hold(false); P.greet(true); P.setBig(introBig()); P.walkTo(introStation(), { instant: true });
-    addEventListener('resize', () => { if (inIntro) { P.setBig(introBig()); P.walkTo(introStation(), { instant: true }); fitRing(); } });
+    hide(true); P.hold(false); P.greet(true); introPlace(); fitSnakes();
+    addEventListener('resize', () => { if (inIntro) { introPlace(); fitRing(); fitSnakes(); } });
     const skip = $('.portal__skip'); if (skip) skip.onclick = () => { tourId++; finishIntro().then(() => hide()); };
     addEventListener('keydown', e => { if (e.key === 'Escape' && inIntro) { tourId++; finishIntro().then(() => hide()); } });
-    try { await Promise.race([document.fonts.ready, wait(1200)]); } catch {}
+    try { await Promise.race([document.fonts.ready, wait(1000)]); } catch {}
     fitRing();
-    await wait(1000); if (!inIntro) return; html.dataset.mi = 'ring';
-    await wait(1900); if (!inIntro) return; html.dataset.mi = 'rise';
-    await wait(500); if (!inIntro) return;
-    P.show(); await P.rise(); if (!inIntro) return;
+    await wait(120); if (!inIntro) return; html.dataset.mi = 'in';              // il wordmark sale al suo posto, le linee e l'anello si disegnano
+    await wait(380); if (!inIntro) return;
+    P.show(); await P.rise(); if (!inIntro) return;                              // Pallino sale da sotto
     if (skip) skip.hidden = false; met = true;
     P.say(T.intro.greet, { plain: true, early: true, keep: true, onLine: i => { if (i) P.wave(2); },
       choices: mainChoices().map(c => ({ ...c, run: () => enter(c.run) })) });

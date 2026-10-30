@@ -624,17 +624,20 @@ html.mi-live .portal { animation: none; }                                   /* l
 @keyframes portalFailsafe { to { clip-path: circle(0% at 50% 50%); } }
 @media (prefers-reduced-motion: reduce) { .portal { display: none; } }
 
-/* — ingresso di MCLS (stati in html[data-mi]: logo → ring → rise → out) — */
+/* — ingresso di MCLS, come nel disegno di Luca (Context/Schermata_sistemata.jpg): il logo con l'anello in alto al centro, le linee «serpente» a bassa opacità dai margini,
+     Pallino che sale da sotto, grande e tagliato dal bordo. Stati in html[data-mi]: (vuoto) → in → out. Le misure (--S, --w-k, --dy) le scrive miVars() in mcls.html — */
 html.mi-live { overflow: hidden; }
-.portal__stage { --S: min(72vh, 92vw, 700px); --lw0: min(64vw, 760px); position: relative; width: var(--S); aspect-ratio: 1; display: grid; place-items: center; transition: transform 1100ms var(--ease); }
+.portal__snakes { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.portal__snakes path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+html[data-mi="in"] .portal__snakes path, html[data-mi="out"] .portal__snakes path { stroke-dashoffset: 0; transition: stroke-dashoffset 1300ms cubic-bezier(.45, 0, .2, 1) var(--d, 0ms); }
+.portal__stage { position: absolute; left: 50%; top: 18.2%; width: var(--S, 366px); aspect-ratio: 1; transform: translate(-50%, -50%); display: grid; place-items: center; }
 .portal__ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.portal__ring text { font: 600 34px var(--display); fill: #fff; text-transform: uppercase; }          /* la spaziatura la calcola guide.js (fitRing) perché il testo copra il cerchio per intero */
+.portal__ring text { font: 500 38px var(--display); fill: #fff; text-transform: uppercase; }          /* corpo e proporzioni misurati sul disegno; la spaziatura la calcola guide.js (fitRing) perché il testo copra il cerchio per intero */
 .mi-mask__p { stroke-dasharray: 1; stroke-dashoffset: 1; }
-.portal__stage .portal__w { grid-area: 1 / 1; width: var(--lw0); transform-origin: 50% 50%; will-change: transform; }
-html[data-mi="ring"] .portal .portal__w, html[data-mi="rise"] .portal .portal__w, html[data-mi="out"] .portal .portal__w { transform: scale(var(--ls, .5)); transition: transform 1100ms var(--ease); }          /* --ls: quanto si rimpicciolisce, lo calcola guide.js (fitRing) in base al cerchio */
-html[data-mi="ring"] .mi-mask__p, html[data-mi="rise"] .mi-mask__p, html[data-mi="out"] .mi-mask__p { stroke-dashoffset: 0; transition: stroke-dashoffset 1800ms cubic-bezier(.5, 0, .2, 1) 250ms; }
-html[data-mi="rise"] .portal__stage, html[data-mi="out"] .portal__stage { transform: translateY(-17vh) scale(.82); }
-.portal__stage { will-change: transform; }
+html[data-mi="in"] .mi-mask__p, html[data-mi="out"] .mi-mask__p { stroke-dashoffset: 0; transition: stroke-dashoffset 1000ms cubic-bezier(.5, 0, .2, 1) 450ms; }
+.portal__stage .portal__w { grid-area: 1 / 1; width: calc(var(--S, 366px) * .655); transform-origin: 50% 50%; will-change: transform; }
+html.pt-portal .portal .portal__stage .portal__w { transform: translateY(var(--dy, 0px)) scale(var(--w-k, 1)); }          /* all'arrivo il wordmark è grande al centro, come nel portale della pagina di prima... */
+html.pt-portal[data-mi="in"] .portal .portal__stage .portal__w, html.pt-portal[data-mi="out"] .portal .portal__stage .portal__w { transform: none; transition: transform 800ms cubic-bezier(.65, 0, .2, 1) 120ms; }          /* ...poi sale al suo posto */
 /* sotto il blu la pagina non si vede: niente da disegnare né da animare finché dura l'ingresso (torna visibile appena il blu si richiude) */
 html.mi-live:not([data-mi="out"]) body > :not(.portal):not(.mascot):not(.curtain):not(script) { visibility: hidden; }
 .portal__skip { position: absolute; right: clamp(16px, 3vw, 40px); bottom: clamp(16px, 3vw, 40px); z-index: 2; padding: .75em 1.3em; border: 1px solid rgba(255, 255, 255, .55); border-radius: 999px; background: transparent; color: #fff; font-size: .75rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; pointer-events: auto; transition: background var(--t) var(--ease), color var(--t) var(--ease); }
