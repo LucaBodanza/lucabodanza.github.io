@@ -12,7 +12,7 @@
     return;
   }
   const b = BR.items[i], prev = BR.items[(i + BR.items.length - 1) % BR.items.length], next = BR.items[(i + 1) % BR.items.length];
-  const cat = BR.cats.find(c => c.k === b.cat).label, dir = `brand-manuals/${b.slug}/`;
+  const cat = BR.cats.find(c => c.k === b.cat).label, dir = `brand-manuals/${b.slug}/`, q = BR.v ? `?v=${BR.v}` : '';   // il numero cambia a ogni build_brands: niente manuali vecchi in cache
   document.title = `${b.name} — Brand manual — Luca Bodanza`;
   main.innerHTML = `<section class="container bv">
     <a class="bv__back" href="${back}"><span data-t="brand.ui.back">← MCLS</span> · ${dist ? dist.label.replace('&', '&amp;') : 'Settori'}</a>
@@ -20,11 +20,11 @@
       <div><p class="eyebrow">${cat} · <span data-t="brand.ui.n">N°</span> ${String(b.n).padStart(2, '0')}</p><h1 class="bv__t">${b.name}</h1><p class="bv__sector">${b.sector}</p></div>
       <div class="bv__tools">
         <span class="bv__pal" role="img" aria-label="Palette del brand">${b.palette.map(c => `<i style="background:${c}"></i>`).join('')}</span>
-        <a class="btn btn--solid" href="${dir}${b.slug}.pdf" download="Brand_Manual_${b.name}.pdf"><span class="btn__label" data-t="brand.ui.pdf">Scarica il PDF ↓</span></a>
-        <a class="btn" href="${dir}index.html" target="_blank" rel="noopener"><span class="btn__label" data-t="brand.ui.full">Schermo intero ↗</span></a>
+        <a class="btn btn--solid" href="${dir}${b.slug}.pdf${q}" download="Brand_Manual_${b.name}.pdf"><span class="btn__label" data-t="brand.ui.pdf">Scarica il PDF ↓</span></a>
+        <a class="btn" href="${dir}index.html${q}" target="_blank" rel="noopener"><span class="btn__label" data-t="brand.ui.full">Schermo intero ↗</span></a>
       </div>
     </div>
-    <div class="bv__frame"><iframe src="${dir}index.html" title="Brand manual ${b.name}"></iframe></div>
+    <div class="bv__frame"><iframe src="${dir}index.html${q}" title="Brand manual ${b.name}"></iframe></div>
     <nav class="bv__pn" aria-label="Altri brand manual">
       <a class="bv__a" href="brand.html?b=${prev.slug}"><small data-t="brand.ui.prev">← Precedente</small><b>${prev.name}</b></a>
       <a class="bv__a bv__a--n" href="brand.html?b=${next.slug}"><small data-t="brand.ui.next">Successivo →</small><b>${next.name}</b></a>

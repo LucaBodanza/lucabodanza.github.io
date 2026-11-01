@@ -1,5 +1,6 @@
 /* Generato da tools/build_brands.py — i 42 brand manual della libreria Progetti personali. */
 window.BRANDS = {
+ "v": 1793541416,
  "cats": [
   {
    "k": "Brand",
@@ -42,7 +43,7 @@ window.BRANDS = {
     "#F9F9F9"
    ],
    "pages": 42,
-   "style": "Bold Block"
+   "style": "Slide Studio"
   },
   {
    "slug": "louren",
@@ -58,8 +59,8 @@ window.BRANDS = {
     "#1A191F",
     "#FAF7F2"
    ],
-   "pages": 33,
-   "style": "Playful Pop"
+   "pages": 41,
+   "style": "Studio Nero"
   },
   {
    "slug": "victoire",
@@ -75,8 +76,8 @@ window.BRANDS = {
     "#121824",
     "#F5F7FA"
    ],
-   "pages": 34,
-   "style": "Atelier"
+   "pages": 42,
+   "style": "Massive"
   },
   {
    "slug": "life-of-statue",
@@ -93,7 +94,7 @@ window.BRANDS = {
     "#F4F2EE"
    ],
    "pages": 42,
-   "style": "Swiss Grid"
+   "style": "Colore Pieno"
   },
   {
    "slug": "merin",
@@ -110,7 +111,7 @@ window.BRANDS = {
     "#F3F6F3"
    ],
    "pages": 33,
-   "style": "Atelier"
+   "style": "Doppia Pagina"
   },
   {
    "slug": "thomas-hook",
@@ -126,8 +127,8 @@ window.BRANDS = {
     "#26211F",
     "#F7F5F0"
    ],
-   "pages": 34,
-   "style": "Playful Pop"
+   "pages": 42,
+   "style": "Slide Studio"
   },
   {
    "slug": "maestral",
@@ -144,7 +145,7 @@ window.BRANDS = {
     "#F0F9FF"
    ],
    "pages": 42,
-   "style": "Editoriale"
+   "style": "Tessera Scura"
   },
   {
    "slug": "valkirie-boutique",
@@ -161,7 +162,7 @@ window.BRANDS = {
     "#FAF5F5"
    ],
    "pages": 42,
-   "style": "Minimal Luxe"
+   "style": "Colore Pieno"
   },
   {
    "slug": "l-uve",
@@ -177,8 +178,8 @@ window.BRANDS = {
     "#251C20",
     "#FAF8F5"
    ],
-   "pages": 34,
-   "style": "Bento Grid"
+   "pages": 42,
+   "style": "Colony Grid"
   },
   {
    "slug": "abstract-design",
@@ -195,7 +196,7 @@ window.BRANDS = {
     "#F8F8FA"
    ],
    "pages": 41,
-   "style": "Minimal Luxe"
+   "style": "Terra & Carta"
   },
   {
    "slug": "dynamo",
@@ -211,8 +212,8 @@ window.BRANDS = {
     "#18181F",
     "#F5F5F7"
    ],
-   "pages": 34,
-   "style": "Atelier"
+   "pages": 42,
+   "style": "Massive"
   },
   {
    "slug": "monstram",
@@ -229,7 +230,7 @@ window.BRANDS = {
     "#F5F3FF"
    ],
    "pages": 42,
-   "style": "Bold Block"
+   "style": "Navy & Titolo"
   },
   {
    "slug": "anstellar",
@@ -246,7 +247,7 @@ window.BRANDS = {
     "#F0F7FF"
    ],
    "pages": 42,
-   "style": "Dark Tech"
+   "style": "Tessera Scura"
   },
   {
    "slug": "captcha",
@@ -263,7 +264,7 @@ window.BRANDS = {
     "#EDFCF4"
    ],
    "pages": 34,
-   "style": "Bento Grid"
+   "style": "Doppia Pagina"
   },
   {
    "slug": "wild-life",
@@ -280,7 +281,7 @@ window.BRANDS = {
     "#F2F7F7"
    ],
    "pages": 42,
-   "style": "Dark Tech"
+   "style": "Immagine Piena"
   },
   {
    "slug": "gran-lorin-s",
@@ -297,7 +298,7 @@ window.BRANDS = {
     "#F8FAFB"
    ],
    "pages": 41,
-   "style": "Dark Tech"
+   "style": "Navy & Titolo"
   },
   {
    "slug": "lsg",
@@ -314,7 +315,7 @@ window.BRANDS = {
     "#F8FAFC"
    ],
    "pages": 41,
-   "style": "Minimal Luxe"
+   "style": "Colony Grid"
   },
   {
    "slug": "byte-mwp",
@@ -331,7 +332,7 @@ window.BRANDS = {
     "#F2F8F4"
    ],
    "pages": 42,
-   "style": "Editoriale"
+   "style": "Brandbook Mono"
   },
   {
    "slug": "astro-wild",
@@ -347,8 +348,8 @@ window.BRANDS = {
     "#241B18",
     "#FAF2EE"
    ],
-   "pages": 34,
-   "style": "Playful Pop"
+   "pages": 42,
+   "style": "Immagine Piena"
   },
   {
    "slug": "21world",
@@ -364,8 +365,8 @@ window.BRANDS = {
     "#14141B",
     "#F5F5FA"
    ],
-   "pages": 33,
-   "style": "Bento Grid"
+   "pages": 41,
+   "style": "Colore Araldico"
   },
   {
    "slug": "asphalt-sound",
@@ -382,7 +383,7 @@ window.BRANDS = {
     "#F2F2F5"
    ],
    "pages": 41,
-   "style": "Editoriale"
+   "style": "Terra & Carta"
   },
   {
    "slug": "look-music",
@@ -399,7 +400,7 @@ window.BRANDS = {
     "#FDF4F8"
    ],
    "pages": 41,
-   "style": "Swiss Grid"
+   "style": "Terra & Carta"
   },
   {
    "slug": "yearecords",
@@ -416,7 +417,7 @@ window.BRANDS = {
     "#FFF5E6"
    ],
    "pages": 42,
-   "style": "Editoriale"
+   "style": "Massive"
   },
   {
    "slug": "alos-music-co",
@@ -433,7 +434,7 @@ window.BRANDS = {
     "#F4F7F2"
    ],
    "pages": 42,
-   "style": "Bold Block"
+   "style": "Studio Nero"
   },
   {
    "slug": "bridge-music",
@@ -450,7 +451,7 @@ window.BRANDS = {
     "#F0F9FF"
    ],
    "pages": 41,
-   "style": "Dark Tech"
+   "style": "Colony Grid"
   },
   {
    "slug": "high-music",
@@ -466,8 +467,8 @@ window.BRANDS = {
     "#12121E",
     "#F4F6FF"
    ],
-   "pages": 34,
-   "style": "Playful Pop"
+   "pages": 42,
+   "style": "Slide Studio"
   },
   {
    "slug": "code-s",
@@ -484,7 +485,7 @@ window.BRANDS = {
     "#F0FDF4"
    ],
    "pages": 42,
-   "style": "Bold Block"
+   "style": "Tessera Scura"
   },
   {
    "slug": "succes",
@@ -501,7 +502,7 @@ window.BRANDS = {
     "#FEFCE8"
    ],
    "pages": 34,
-   "style": "Atelier"
+   "style": "Doppia Pagina"
   },
   {
    "slug": "v-sounds-records",
@@ -518,7 +519,7 @@ window.BRANDS = {
     "#ECFEFF"
    ],
    "pages": 42,
-   "style": "Minimal Luxe"
+   "style": "Immagine Piena"
   },
   {
    "slug": "4-studio",
@@ -535,7 +536,7 @@ window.BRANDS = {
     "#FAFAFA"
    ],
    "pages": 42,
-   "style": "Swiss Grid"
+   "style": "Brandbook Mono"
   },
   {
    "slug": "sound-boss",
@@ -551,8 +552,8 @@ window.BRANDS = {
     "#121216",
     "#FEF2F2"
    ],
-   "pages": 33,
-   "style": "Bento Grid"
+   "pages": 41,
+   "style": "Colore Araldico"
   },
   {
    "slug": "lyron-coffe",
@@ -569,7 +570,7 @@ window.BRANDS = {
     "#FAF5EE"
    ],
    "pages": 41,
-   "style": "Minimal Luxe"
+   "style": "Studio Nero"
   },
   {
    "slug": "peperino-food",
@@ -585,8 +586,8 @@ window.BRANDS = {
     "#26131A",
     "#FFF1F5"
    ],
-   "pages": 33,
-   "style": "Playful Pop"
+   "pages": 41,
+   "style": "Colore Pieno"
   },
   {
    "slug": "vram-armory",
@@ -603,7 +604,7 @@ window.BRANDS = {
     "#F0F5F4"
    ],
    "pages": 41,
-   "style": "Bold Block"
+   "style": "Colore Pieno"
   },
   {
    "slug": "fabrizio-lombardi",
@@ -620,7 +621,7 @@ window.BRANDS = {
     "#F4F8FA"
    ],
    "pages": 41,
-   "style": "Swiss Grid"
+   "style": "Navy & Titolo"
   },
   {
    "slug": "pianeta-dei-lettori",
@@ -636,8 +637,8 @@ window.BRANDS = {
     "#191222",
     "#FBF4F9"
    ],
-   "pages": 34,
-   "style": "Bento Grid"
+   "pages": 42,
+   "style": "Studio Nero"
   },
   {
    "slug": "people",
@@ -654,7 +655,7 @@ window.BRANDS = {
     "#F2FAFA"
    ],
    "pages": 42,
-   "style": "Editoriale"
+   "style": "Immagine Piena"
   },
   {
    "slug": "brainwave",
@@ -671,7 +672,7 @@ window.BRANDS = {
     "#EFFBFC"
    ],
    "pages": 41,
-   "style": "Swiss Grid"
+   "style": "Colore Araldico"
   },
   {
    "slug": "x-cloud",
@@ -688,7 +689,7 @@ window.BRANDS = {
     "#F4F6FF"
    ],
    "pages": 41,
-   "style": "Dark Tech"
+   "style": "Colony Grid"
   },
   {
    "slug": "quby",
@@ -704,8 +705,8 @@ window.BRANDS = {
     "#122028",
     "#F0FAF2"
    ],
-   "pages": 33,
-   "style": "Atelier"
+   "pages": 41,
+   "style": "Navy & Titolo"
   },
   {
    "slug": "my-home",
@@ -722,7 +723,7 @@ window.BRANDS = {
     "#F4F6F3"
    ],
    "pages": 42,
-   "style": "Dark Tech"
+   "style": "Brandbook Mono"
   },
   {
    "slug": "ziheck-ren-sport",
@@ -739,7 +740,7 @@ window.BRANDS = {
     "#F7F7FA"
    ],
    "pages": 42,
-   "style": "Bold Block"
+   "style": "Colore Araldico"
   }
  ]
 };
